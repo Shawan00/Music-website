@@ -2,16 +2,23 @@ import { Outlet } from "react-router-dom"
 import Footer from "../Footer"
 import Header from "../Header"
 import PlayerControl from "../PlayerControl"
+import { SidebarProvider } from "@/components/ui/sidebar"
+import AppSidebar from "../AppSidebar"
 
 function UserLayout() {
   return (
     <>
-      <Header/>
-      <div className="main-content">  
-        <Outlet/>
-      </div>
-      <PlayerControl/>
-      <Footer/>
+      <SidebarProvider>
+        <AppSidebar/>
+        <main className="w-full">          
+          <Header/>
+          <div className="container-custom min-h-[calc(100vh-90px)]">
+            <Outlet/>
+            <Footer/>
+          </div>
+          <PlayerControl/>             
+        </main>
+      </SidebarProvider>
     </>
   )
 }

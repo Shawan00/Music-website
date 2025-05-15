@@ -4,20 +4,32 @@ import Modal from 'react-modal';
 import { ToastContainer, toast } from 'react-toastify';
 import { uploadFile } from '../../../services/Admin/uploadFileService';
 import { postSong } from '../../../services/Admin/songService';
+import { useTheme } from '@/components/theme/theme-provider';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import SubmitButton from '@/components/SubmitButton';
+import { predictGenre } from '@/services/Admin/AIService';
+import { defaultImage } from '@/helpers/defaultImage';
+import { Loader2, Plus } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { set } from 'lodash';
 
 function CreateSong(props) {
   const { onReload } = props;
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { theme } = useTheme();
   const [thumbnailPreview, setThumbnailPreview] = useState(null);
   const [backgroundPreview, setBackgroundPreview] = useState(null);
+  const [audioPreview, setAudioPreview] = useState(null)
   const [formData, setFormData] = useState({
     title: "",
-    thumbnail: "",
+    thumbnail: defaultImage,
     background: "",
     description: "",
     lyrics: "",
-    audio: ""
+    audio: "",
+    genre: ""
   });
+  const [genrePredict, setGenrePredict] = useState(null)
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -29,8 +41,21 @@ function CreateSong(props) {
 
   const handleFileUpload = async (e) => {
     const { name, files } = e.target;
-    if(!files[0]) {
+    if (!files[0]) {
       return;
+    }
+    if (name === 'audio') {
+      setGenrePredict("pending")
+      const genre = await predictGenre(files[0])
+      console.log(genre)
+      if (genre.request.status === 200) {
+        setGenrePredict({
+          genre: genre.data.genre,
+          confidence: genre.data.confidence
+        })
+      } else {
+        setGenrePredict("Cannot predict genre")
+      }
     }
     const res = await uploadFile(files[0]);
     const url = res.data.secure_url;
@@ -44,11 +69,13 @@ function CreateSong(props) {
     if (name === 'background') {
       setBackgroundPreview(url);
     }
+    if (name === 'audio') {
+      setAudioPreview(url);
+    }
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    closeModal();
 
     const response = await postSong(formData);
     if (response.data.code === 200) {
@@ -60,7 +87,7 @@ function CreateSong(props) {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: "light",
+        theme: theme,
       });
     } else {
       toast.error(response.data.message, {
@@ -71,65 +98,100 @@ function CreateSong(props) {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: "light",
+        theme: theme,
       });
     }
     onReload();
   }
 
-  const openModal = () => {
-    setIsModalOpen(true);
-  }
-  const closeModal = () => {
+  const clearPreviews = () => {
     setBackgroundPreview(null);
     setThumbnailPreview(null);
-    setIsModalOpen(false);
+    setAudioPreview(null)
+    setGenrePredict(null)
   }
 
   return (
     <>
       <ToastContainer />
-      <button onClick={openModal}>New song</button>
-      <Modal
-        isOpen={isModalOpen}
-        onRequestClose={closeModal}
-        preventScroll={true}
-      >
-        <h3>Add a new song</h3>
-        <button onClick={closeModal}><IoMdClose /></button>
-        <form onSubmit={handleSubmit}>
-          <label>
-            Title
-            <span style={{ color: 'rgb(255, 0, 0)' }}>*</span>
-            <input type='text' name='title' onBlur={handleChange} required></input>
-          </label>
-          <label>
-            Audio
-            <span style={{ color: 'rgb(255, 0, 0)' }}>*</span>
-            <input type='file' name='audio' onChange={handleFileUpload} accept='audio/*' required></input>
-          </label>
-          <label>
-            Thumbnail
-            <input type='file' name='thumbnail' onChange={handleFileUpload} accept="image/*"></input>
-            {thumbnailPreview && (<img src={thumbnailPreview} alt='Uploaded' width='80px'></img>)}
-          </label>
-          <label>
-            Background
-            <input type='file' name='background' onChange={handleFileUpload} accept='image/*'></input>
-            {backgroundPreview && (<img src={backgroundPreview} alt='Uploaded' width='80px'></img>)}
-          </label>
-          <label>
-            Lyrics
-            <input type='file' name='lyrics' onChange={handleFileUpload} accept='.lrc'></input>
-          </label>
-          <label>
-            Description
-            <textarea rows={4} name='description' onBlur={handleChange}></textarea>
-          </label>
-          <button onClick={closeModal}>Cancel</button>
-          <button type='submit'>OK</button>
-        </form>
-      </Modal>
+      <Dialog>
+        <DialogTrigger asChild>
+          <Button
+            variant="outline"
+            className="text-lg flex items-center"
+          >
+            <Plus className='size-lg' /> New song
+          </Button>
+        </DialogTrigger>
+
+        <DialogContent className="w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-2xl xl:max-w-5xl">
+          <DialogHeader>
+            <DialogTitle>Create a new song</DialogTitle>
+          </DialogHeader>
+          <div className='overflow-auto max-h-[70vh]'>
+            <form onSubmit={handleSubmit}>
+              <label>
+                <span>Title <span style={{ color: 'rgb(255, 0, 0)' }}>*</span></span>
+                <input
+                  type='text'
+                  name='title'
+                  onBlur={handleChange}
+                  required
+                ></input>
+              </label>
+              <label className='mt-5'>
+                <span>Audio <span style={{ color: 'rgb(255, 0, 0)' }}>*</span></span>
+                <Input
+                  type='file'
+                  name='audio'
+                  onChange={handleFileUpload}
+                  accept='audio/*'
+                  required
+                ></Input>
+              </label>
+              {audioPreview && (<audio src={audioPreview} controls></audio>)}
+              {genrePredict && (<>
+                {typeof genrePredict === 'string' ? (<div className='flex gap-1'>
+                  <Loader2 className='animate-spin' />
+                  <span>{genrePredict}</span>
+                </div>) : (<>
+                  <label className='mt-5'>
+                    <span>Predicted genre</span>
+                    <input
+                      type='text'
+                      name='genre'
+                      value={genrePredict.genre}
+                      onChange={handleChange}
+                    ></input>
+                  </label>
+                </>)}
+              </>)}
+
+              <div className='grid md:grid-cols-2 gap-5 mt-5'>
+                <label>
+                  <span>Thumbnail</span>
+                  <Input type='file' name='thumbnail' onChange={handleFileUpload} accept="image/*"></Input>
+                  {thumbnailPreview && (<img src={thumbnailPreview} alt='Uploaded' width='80px'></img>)}
+                </label>
+                <label>
+                  <span>Background</span>
+                  <Input type='file' name='background' onChange={handleFileUpload} accept='image/*'></Input>
+                  {backgroundPreview && (<img src={backgroundPreview} alt='Uploaded' width='80px'></img>)}
+                </label>
+                <label>
+                  <span>Lyrics</span>
+                  <Input type='file' name='lyrics' onChange={handleFileUpload} accept='.lrc'></Input>
+                </label>
+              </div>
+              <label className='mt-5'>
+                <span>Description</span>
+                <textarea rows={4} name='description' onBlur={handleChange}></textarea>
+              </label>
+              <SubmitButton className="mt-5 ml-auto flex" />
+            </form>
+          </div>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

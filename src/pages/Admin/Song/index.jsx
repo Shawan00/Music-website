@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { getSong } from "../../../services/Admin/songService";
 import { useSearchParams } from "react-router-dom";
-// import Pagination from "../../../components/Admin/Pagination";name === 'thumbnail' || name === 'background'
+// import Pagination from "../../../components/Admin/Pagination";
 import SongList from "./SongList";
 import CreateSong from "./CreateSong";
+import UpdateSong from "./UpdateSong";
 
 function Song() {
 	const [songData, setSongData] = useState({});
@@ -31,6 +32,7 @@ function Song() {
 			<CreateSong onReload={handleReload}/>
 			{/* <Pagination objectPagination={songData.objectPagination}/> */}
 			<SongList data={songList}/>
+			<UpdateSong/>
 		</>
 	) : (
 		<>

@@ -4,6 +4,7 @@ import Genre from "../pages/Admin/Genre";
 import Song from "../pages/Admin/Song";
 import UserLayout from "../components/User/UserLayout";
 import HomePage from "../pages/User/HomePage";
+import AITunner from "@/pages/Admin/AI Tunner";
 
 export const adminRoutes = [
   {
@@ -17,12 +18,16 @@ export const adminRoutes = [
       {
         path: "song",
         element: <Song />
+      },
+      {
+        path: "tuner",
+        element: <AITunner/>
       }
     ]
   },
   {
     path: "*",
-    element: <Navigate to="/" />
+    element: <Navigate to="/admin" />
   }
 ]
 

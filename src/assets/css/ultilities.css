@@ -1,0 +1,22 @@
+@layer utilities {
+  .inner-title {
+    @apply max-w-40 mr-2;
+  }
+
+  .inner-title .song-name {
+    @apply font-medium
+  }
+
+  .inner-title .song-artist {
+    @apply text-foreground
+  }
+
+  .inner-image {
+    @apply size-[60px] rounded-lg overflow-hidden
+      flex justify-between items-center
+  }
+
+  .inner-image img {
+    @apply w-full object-cover aspect-square;
+  }
+}

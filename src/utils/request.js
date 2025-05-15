@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const preAIP = "https://projectmusic-production.up.railway.app/";
+const preAIP = "http://localhost:3000/";
 
 const api = axios.create({
   baseURL: preAIP,

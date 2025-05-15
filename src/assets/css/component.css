@@ -1,0 +1,70 @@
+@layer components {
+  .container-custom {
+    @apply block w-full max-w-[97%] md:max-w-[95%] lg:max-w-[90%] mx-auto
+  }
+
+  .container-custom-sm {
+    @apply block w-full max-w-[97%] md:max-w-[92%] lg:max-w-[85%] mx-auto 
+  }
+
+  header.header-user {
+    @apply w-full py-2 bg-background 
+          sticky top-0 left-0 z-50 
+          flex justify-between items-center 
+  }
+  /* player-control */
+  .player-control {
+    @apply sticky bottom-0 left-0 z-50 w-full h-[90px]
+      bg-no-repeat bg-cover bg-center
+  }
+
+  .player-control .inner-rounded-thumbnail{
+    @apply size-[60px] rounded-full overflow-hidden
+      flex justify-between items-center
+  }
+
+  .player-control .inner-rounded-thumbnail .rounded-thumbnail {
+    @apply size-full object-cover aspect-square;
+  }
+
+  .animation-spin {
+    animation: spin 20s linear infinite
+  }
+
+  /* end player-control */
+
+  /* glass background */
+  .glass-background {
+    @apply backdrop-blur-2xl p-6 transition-colors duration-300 
+      w-full h-full;
+    
+    background-color: rgba(255, 255, 255, 0.7); /* Light mode default */
+    border-color: var(--color-border);
+    color: var(--color-foreground);
+  }
+
+  .dark .glass-background {
+    background-color: rgba(0, 0, 0, 0.7); /* Dark mode */
+  }
+  /* end glass background  */
+
+  /* input label */
+  input:focus {
+    outline: none;
+  }
+  textarea:focus {
+    outline: none
+  }
+  label {
+    @apply flex flex-col gap-1
+  }
+
+  label span{
+    @apply font-medium
+  }
+
+  label input, label textarea {
+    @apply w-full p-3 border border-primary-foreground rounded-lg
+  }
+  /* end input label */
+}

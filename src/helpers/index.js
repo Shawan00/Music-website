@@ -14,6 +14,13 @@ export const formatDate = (date) => {
   return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
 };
 
+export const formatTimeMinute = (time) => {
+  if(isNaN(time)) return "00:00";
+  const minutes = Math.floor(time / 60);
+  const seconds = Math.floor(time % 60);
+  return `${minutes.toString()}:${seconds.toString().padStart(2, "0")}`;
+}
+
 export const resizeImage = (img, width) => {
   return img.replace('upload/', `upload/c_limit,w_${width}/f_auto/`);
 }
