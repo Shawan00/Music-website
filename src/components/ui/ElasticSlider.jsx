@@ -165,7 +165,7 @@ function Slider({
           >
             <div className="relative h-full flex-grow overflow-hidden rounded-full bg-gray-400">
               <div
-                className="absolute h-full bg-gray-500 rounded-full"
+                className="absolute h-full bg-[var(--green-bg)] rounded-full"
                 style={{ width: `${getRangePercentage()}%` }}
               />
             </div>
@@ -186,7 +186,7 @@ function Slider({
           {rightIcon}
         </motion.div>
       </motion.div>
-      <p className="absolute text-gray-400 transform -translate-y-4 text-xs font-medium tracking-wide">
+      <p className="absolute text-muted-foreground transform -translate-y-4 text-xs font-medium tracking-wide">
         {Math.round(value)}
       </p>
     </>

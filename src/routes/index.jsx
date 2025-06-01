@@ -24,10 +24,6 @@ export const adminRoutes = [
         element: <AITunner/>
       }
     ]
-  },
-  {
-    path: "*",
-    element: <Navigate to="/admin" />
   }
 ]
 

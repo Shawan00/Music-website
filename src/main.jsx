@@ -5,7 +5,7 @@ import { BrowserRouter } from 'react-router-dom';
 import Modal from 'react-modal';
 import React from 'react';
 import { Provider } from 'react-redux';
-import { store } from '../../music-project/src/app/store.js';
+import { store } from './app/store.js';
 
 Modal.setAppElement('#root');
 

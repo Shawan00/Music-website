@@ -1,6 +1,4 @@
 import { memo, useState } from 'react';
-import { IoMdClose } from 'react-icons/io';
-import Modal from 'react-modal';
 import { ToastContainer, toast } from 'react-toastify';
 import { uploadFile } from '../../../services/Admin/uploadFileService';
 import { postSong } from '../../../services/Admin/songService';
@@ -12,11 +10,11 @@ import { predictGenre } from '@/services/Admin/AIService';
 import { defaultImage } from '@/helpers/defaultImage';
 import { Loader2, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { set } from 'lodash';
 
 function CreateSong(props) {
   const { onReload } = props;
   const { theme } = useTheme();
+  const [isOpen, setIsOpen] = useState(false);
   const [thumbnailPreview, setThumbnailPreview] = useState(null);
   const [backgroundPreview, setBackgroundPreview] = useState(null);
   const [audioPreview, setAudioPreview] = useState(null)
@@ -89,6 +87,8 @@ function CreateSong(props) {
         progress: undefined,
         theme: theme,
       });
+      setIsOpen(false);
+      clearPreviews();
     } else {
       toast.error(response.data.message, {
         position: "top-right",
@@ -114,7 +114,7 @@ function CreateSong(props) {
   return (
     <>
       <ToastContainer />
-      <Dialog>
+      <Dialog open={isOpen} onOpenChange={setIsOpen}> 
         <DialogTrigger asChild>
           <Button
             variant="outline"

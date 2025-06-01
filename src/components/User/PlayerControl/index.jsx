@@ -21,11 +21,17 @@ function PlayerControl() {
     setIsPlaying(audioRef.current.togglePlay());
   }
 
+  const toggleRepeat = () => { //gọi hàm từ component con điều kiển repeat
+    setEnableRepeat(audioRef.current.toggleRepeat());
+  }
+
   useEffect(() => {
     //Create media session
     if (!song) {
       return
     };
+
+    setEnableRepeat(audioRef.current.audioLoopState());
 
     if ('mediaSession' in navigator) {
       navigator.mediaSession.metadata = new MediaMetadata({
@@ -106,8 +112,8 @@ function PlayerControl() {
           <div className="options">
             <EllipsisVertical />
           </div>
-          <div className="flex-1 flex flex-col items-center justify-around gap-2">
-            <div className="inner-button">
+          <div className="flex-1 flex flex-col items-center justify-around gap-1">
+            <div className="inner-button flex gap-4 items-center justify-center">
               <Tooltip>
                 <TooltipTrigger asChild>
                   <button><Heart /></button>
@@ -119,7 +125,7 @@ function PlayerControl() {
 
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <button><SkipBack /></button>
+                  <button className="active:text-[var(--green-highlight)]"><SkipBack /></button>
                 </TooltipTrigger>
                 <TooltipContent>
                   <p>Previous</p>
@@ -128,7 +134,10 @@ function PlayerControl() {
 
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <button className="main-button" onClick={togglePlay}>{isPlaying ? <Pause /> : <Play />}</button>
+                  <button 
+                    className="border border-primary p-2 rounded-full hover:border-[var(--green-highlight)] hover:text-[var(--green-highlight)] transition-colors duration-300" 
+                    onClick={togglePlay}>{isPlaying ? <Pause /> : <Play />}
+                  </button>
                 </TooltipTrigger>
                 <TooltipContent>
                   <p>{isPlaying ? "Pause" : "Play"}</p>
@@ -137,7 +146,7 @@ function PlayerControl() {
 
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <button><SkipForward /></button>
+                  <button className="active:text-[var(--green-highlight)]"><SkipForward /></button>
                 </TooltipTrigger>
                 <TooltipContent>
                   <p>Next</p>
@@ -146,7 +155,9 @@ function PlayerControl() {
 
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <button onClick={() => setEnableRepeat(prev => !prev)}><Repeat /></button>
+                  <button onClick={() => toggleRepeat()} className="active:text-[var(--green-highlight)]">
+                    <Repeat color={enableRepeat? "var(--green-highlight)" : "var(--primary)"}/>
+                  </button>
                 </TooltipTrigger>
                 <TooltipContent>
                   <p>{enableRepeat ? "Disable repeat" : "Enable repeat"}</p>
@@ -161,7 +172,7 @@ function PlayerControl() {
               setPlayingState={setIsPlaying}
             />
           </div>
-          <div className="flex gap-2 items-center overflow-hidden">
+          <div className="flex gap-5 items-center overflow-hidden">
             <div className="flex-shrink-0">
               <MonitorPlay />
             </div>
@@ -181,7 +192,7 @@ function PlayerControl() {
                   clearMediaSession()
                   dispatch(removeSong())
                 }}>
-                  <X />
+                  <X className="size-3 hover:text-destructive"/>
                 </button>
               </TooltipTrigger>
               <TooltipContent>

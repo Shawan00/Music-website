@@ -1,8 +1,9 @@
+import { Slider } from '@/components/ui/slider';
 import { formatTimeMinute } from '@/helpers';
-import {forwardRef, useRef, useEffect, useState, useImperativeHandle} from 'react';
+import { forwardRef, useRef, useEffect, useState, useImperativeHandle } from 'react';
 
 const ProgressBar = forwardRef((props, ref) => {
-  const {src, setPlayingState, volume} = props;
+  const { src, setPlayingState, volume } = props;
   const audioRef = useRef(null);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -33,7 +34,7 @@ const ProgressBar = forwardRef((props, ref) => {
       isPlaying.current = false
       setPlayingState(false)
     }
-    
+
     audio.addEventListener('timeupdate', updateCurrentTime);
     audio.addEventListener('loadedmetadata', handleLoadedMetadata);
     audio.addEventListener('play', handlePlay);
@@ -50,21 +51,21 @@ const ProgressBar = forwardRef((props, ref) => {
   useEffect(() => { //cập nhật volume
     const audio = audioRef.current;
     audio.volume = volume / 100;
-  },[volume])
-  
-  //xử lý việc tua nhạc
-  const handleSeek = (e) => {
+  }, [volume])
+
+  //xử lý tua nhạc
+  const handleSeek = (value) => {
     isDragging.current = true;
-    setCurrentTime(e.target.value);
+    setCurrentTime(value[0]);
   }
 
   const handleDragStart = () => {
     isDragging.current = true
   }
 
-  const handleDragEnd = (e) => {
+  const handleDragEnd = () => {
     const audio = audioRef.current;
-    audio.currentTime = e.target.value;
+    audio.currentTime = currentTime;
     isDragging.current = false
   }
 
@@ -81,6 +82,15 @@ const ProgressBar = forwardRef((props, ref) => {
       }
       return isPlaying.current
     },
+    toggleRepeat() { // xử lý lặp lại
+      const audio = audioRef.current
+      audio.loop = !audio.loop;
+      return audio.loop
+    },
+    audioLoopState() { //trả về trạng thái lặp lại
+      const audio = audioRef.current
+      return audio.loop
+    },
     cleanup() { //xoá media session khi tắt nhạc
       const audio = audioRef.current
       audio.pause()
@@ -92,26 +102,27 @@ const ProgressBar = forwardRef((props, ref) => {
 
   return (
     <>
-      <audio 
+      <audio
         ref={audioRef} src={src}
         className='hidden'
-        controls preload="metadata" 
-        autoPlay muted ></audio>
-      <div className="CurrentTime-bar">
+        controls preload="metadata"
+        autoPlay muted
+      ></audio>
+      <div className="CurrentTime-bar flex items-center">
         <span className='minute-second'>{formatTimeMinute(currentTime)}</span>
-        <input
-          type="range"
-          min="0"
+        <Slider
+          defaultValue={[0]}
+          value={[currentTime]}
           max={duration}
-          value={currentTime}
-          onChange={handleSeek}
-          onMouseDown={handleDragStart}
-          onMouseUp={handleDragEnd}
-          onTouchStart={handleDragStart}
-          onTouchEnd={handleDragEnd}
-        ></input>
+          step={0.1}
+          onPointerDown={handleDragStart}
+          onPointerUp={handleDragEnd}
+          onValueChange={handleSeek}
+          className={`w-90 mx-2`}
+        />
         <span className="minute-second">{formatTimeMinute(duration)}</span>
       </div>
+
     </>
   );
 });

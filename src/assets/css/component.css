@@ -31,6 +31,10 @@
     animation: spin 20s linear infinite
   }
 
+  .minute-second {
+    @apply text-sm text-muted-foreground
+  }
+
   /* end player-control */
 
   /* glass background */
@@ -38,13 +42,13 @@
     @apply backdrop-blur-2xl p-6 transition-colors duration-300 
       w-full h-full;
     
-    background-color: rgba(255, 255, 255, 0.7); /* Light mode default */
+    background-color: rgba(255, 255, 255, 0.8); /* Light mode default */
     border-color: var(--color-border);
     color: var(--color-foreground);
   }
 
   .dark .glass-background {
-    background-color: rgba(0, 0, 0, 0.7); /* Dark mode */
+    background-color: rgba(0, 0, 0, 0.75); /* Dark mode */
   }
   /* end glass background  */
 
