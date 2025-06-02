@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarFooter, SidebarHeader } from "@/components/ui/sidebar";
 import { ListMusic, Home, Heart, ChartBarDecreasing, Settings } from "lucide-react";
 import Logo from "@/components/Logo";
@@ -29,8 +29,11 @@ const menuItems = [
 ]
 
 function AppSidebar() {
+  const location = useLocation();
+  console.log("AppSidebar location: ", location.pathname);
+
   return (
-    <Sidebar collapsible="icon">
+    <Sidebar collapsible="icon" >
       <SidebarHeader>
         <Link to="/" className="px-2">
           <Logo width="150" />
@@ -43,16 +46,18 @@ function AppSidebar() {
             <SidebarMenu>
               {menuItems.map((item, index) => (
                 <SidebarMenuItem key={index}>
-                  <SidebarMenuButton asChild
+                  <SidebarMenuButton 
+                    asChild
                     tooltip={{
                       children: item.title,
                       side: "right",
                       align: "center"
-                    }}                  
+                    }}
+                    isActive={location.pathname === item.url}                
                   >
-                    <Link to={item.url} className="px-2 gap-4">
-                      <item.icon className="!w-6 !h-6 shrink-0"/>
-                      <span className="text-base font-base">{item.title}</span>
+                    <Link to={item.url} className="gap-4">
+                      <item.icon className="!w-7 !h-7 shrink-0"/>
+                      <span className="text-base font-medium">{item.title}</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>

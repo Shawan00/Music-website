@@ -1,22 +1,50 @@
 @layer utilities {
-  .inner-title {
-    @apply max-w-40 mr-2;
+  /* Home page */
+  .sugessted-song {
+    @apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4
   }
 
-  .inner-title .song-name {
-    @apply font-medium
+  .sugessted-song .song-item {
+    @apply flex items-center justify-between gap-3 p-3 
+      rounded-lg bg-background cursor-pointer
+      hover:bg-muted transition-colors duration-300
   }
 
-  .inner-title .song-artist {
-    @apply text-foreground
-  }
-
-  .inner-image {
-    @apply size-[60px] rounded-lg overflow-hidden
+  .sugessted-song .song-item .image {
+    @apply size-[60px] rounded-sm overflow-hidden
       flex justify-between items-center
   }
 
-  .inner-image img {
+  .sugessted-song .song-item .image img {
     @apply w-full object-cover aspect-square;
   }
+
+  .sugessted-song .song-item .info {
+    @apply flex-1 flex flex-col gap-1
+  }
+
+  .sugessted-song .song-item .info .title {
+    @apply font-medium text-foreground
+  }
+
+  .sugessted-song .song-item .info .artist {
+    @apply text-muted-foreground
+  }
+
+  .sugessted-song .song-item.active {
+    @apply bg-green-100 dark:bg-green-900
+  }
+
+  .sugessted-song .song-item.active .title {
+    @apply text-green-800 dark:text-green-200
+  }
+
+  .sugessted-song .options {
+    @apply invisible pointer-events-none transition-all duration-100
+  }
+
+  .sugessted-song .song-item:hover .options {
+    @apply visible pointer-events-auto
+  }
+  /* End home page  */
 }

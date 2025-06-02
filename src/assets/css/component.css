@@ -1,74 +1,189 @@
 @layer components {
   .container-custom {
-    @apply block w-full max-w-[97%] md:max-w-[95%] lg:max-w-[90%] mx-auto
+    @apply block w-full max-w-[97%] md:max-w-[96%] lg:max-w-[94%] mx-auto
   }
 
   .container-custom-sm {
-    @apply block w-full max-w-[97%] md:max-w-[92%] lg:max-w-[85%] mx-auto 
+    @apply block w-full max-w-[97%] md:max-w-[92%] lg:max-w-[85%] mx-auto
   }
 
   header.header-user {
-    @apply w-full py-2 bg-background 
-          sticky top-0 left-0 z-50 
-          flex justify-between items-center 
-  }
-  /* player-control */
-  .player-control {
-    @apply sticky bottom-0 left-0 z-50 w-full h-[90px]
-      bg-no-repeat bg-cover bg-center
+    @apply w-full py-2 bg-background sticky top-0 left-0 z-50 flex justify-between items-center
   }
 
-  .player-control .inner-rounded-thumbnail{
-    @apply size-[60px] rounded-full overflow-hidden
-      flex justify-between items-center
+  /* player-control */
+  .player-control {
+    @apply sticky bottom-0 left-0 z-50 w-full h-[90px] bg-no-repeat bg-cover bg-center
+  }
+
+  .player-control .inner-rounded-thumbnail {
+    @apply size-[60px] rounded-full overflow-hidden flex justify-between items-center
   }
 
   .player-control .inner-rounded-thumbnail .rounded-thumbnail {
     @apply size-full object-cover aspect-square;
   }
 
-  .animation-spin {
+  .player-control .animation-spin {
     animation: spin 20s linear infinite
   }
 
-  .minute-second {
+  .player-control .minute-second {
     @apply text-sm text-muted-foreground
+  }
+
+  .player-control .inner-title {
+    @apply flex flex-col justify-center items-start gap-1 max-w-35
+  }
+
+  .player-control .inner-title .song-name {
+    @apply font-medium w-full overflow-hidden text-ellipsis whitespace-nowrap
+  }
+
+  .player-control .inner-title .song-artist {
+    @apply text-muted-foreground text-sm w-full overflow-hidden text-ellipsis
+  }
+
+  .player-control .inner-image {
+    @apply size-[60px] rounded-lg overflow-hidden flex justify-between items-center
+  }
+
+  .player-control .inner-image img {
+    @apply w-full object-cover aspect-square;
   }
 
   /* end player-control */
 
   /* glass background */
   .glass-background {
-    @apply backdrop-blur-2xl p-6 transition-colors duration-300 
-      w-full h-full;
-    
-    background-color: rgba(255, 255, 255, 0.8); /* Light mode default */
+    @apply backdrop-blur-2xl p-6 transition-colors duration-300 w-full h-full;
+
+    background-color: rgba(255, 255, 255, 0.8);
+    /* Light mode default */
     border-color: var(--color-border);
     color: var(--color-foreground);
   }
 
   .dark .glass-background {
-    background-color: rgba(0, 0, 0, 0.75); /* Dark mode */
+    background-color: rgba(0, 0, 0, 0.75);
+    /* Dark mode */
   }
+
   /* end glass background  */
 
   /* input label */
   input:focus {
     outline: none;
   }
+
   textarea:focus {
     outline: none
   }
+
   label {
     @apply flex flex-col gap-1
   }
 
-  label span{
+  label span {
     @apply font-medium
   }
 
   label input, label textarea {
     @apply w-full p-3 border border-primary-foreground rounded-lg
   }
+
   /* end input label */
+
+  /* pagination  */
+  .pagination {
+    @apply mb-4 w-full flex flex-col items-center
+  }
+
+  .pagination .pagination__pageSize {
+    @apply flex items-center self-end;
+  }
+
+  .pagination ul {
+    @apply gap-0 md:gap-2.5;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 2px;
+  }
+
+  .pagination ul li {
+    @apply text-black dark:text-white;
+    list-style: none;
+    line-height: 35px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.3s ease;
+  }
+
+  .pagination ul li.numb {
+    list-style: none;
+    height: 35px;
+    width: 35px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border-radius: 5px;
+  }
+
+  .pagination ul li.numb.first {
+    margin: 0px 3px 0 -5px;
+  }
+
+  .pagination ul li.numb.last {
+    margin: 0px -5px 0 3px;
+  }
+
+  .pagination ul li.dots {
+    font-size: 17px;
+    cursor: default;
+  }
+
+  .pagination ul li.btn {
+    padding: 0 20px;
+  }
+
+  .pagination li.active {
+    @apply bg-[var(--green-bg)] text-white;
+    pointer-events: none;
+  }
+
+  .pagination ul li.numb:hover,
+  .pagination ul li:first-child:hover,
+  .pagination ul li:last-child:hover {
+    @apply text-gray-500 dark:text-gray-300;
+  }
+
+  /* end pagination  */
+
+  /* marker  */
+  .marker {
+    @apply flex gap-0.5 w-fit rotate-180 h-6
+  }
+
+  .marker .load {
+    @apply w-0.5 h-6 rounded-sm bg-green-500;
+    animation: jump 1.5s ease-in-out infinite;
+  }
+
+  .marker .load:nth-child(1) {
+    animation-delay: 0.2s;
+  }
+
+  .marker .load:nth-child(2) {
+    animation-delay: 0.4s;
+  }
+
+  .marker .load:nth-child(3) {
+    animation-delay: 0.6s;
+  }
+
+  /* end marker  */
 }

@@ -2,12 +2,12 @@ import { useFormStatus } from 'react-dom'
 import { Button } from '../ui/button'
 import { Loader2 } from 'lucide-react'
 
-function SubmitButton({className}) {
+function SubmitButton({className, isDisabled}) {
   const {pending} = useFormStatus()
 
   return (
     <>
-      <Button type="submit" disabled={pending} 
+      <Button type="submit" disabled={pending || isDisabled} 
         className={`${className} text-white dark:text-gray-900 text-base p-5
           bg-[var(--green-bg)] hover:bg-[var(--green-hover)]`}>
         {pending ? (

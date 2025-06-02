@@ -6,7 +6,12 @@ export async function getGenre(page = 1, limit = 8, sortKey = "title", sortValue
     const response = await get("admin/genre", params);
     return response;
   } catch (error) {
-    console.error(error);
+    return {
+      data: {
+        code: 500,
+        message: "Error fetching genres",
+      }
+    };
   }
 }
 
@@ -19,6 +24,11 @@ export async function postGenre(data) {
     const response = await post("admin/genre/create", formData);
     return response;
   } catch (error) {
-    console.error(error);
+    return {
+      data: {
+        code: 500,
+        message: "Error creating genre",
+      }
+    };
   }
 }

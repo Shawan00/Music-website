@@ -3,7 +3,7 @@ import { defaultImage } from "@/helpers/defaultImage";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ProgressBar from "./ProgressBar";
-import { Pause, Play, Repeat, SkipBack, SkipForward, Heart, X, Volume2, Volume1, Volume, MonitorPlay, ListMusic, EllipsisVertical } from "lucide-react";
+import { Pause, Play, Repeat, SkipBack, SkipForward, Heart, X, Volume2, Volume1, Volume, MonitorPlay, ListMusic, EllipsisVertical, Repeat2 } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { removeSong } from "@/features/playerControl/playerControlSlice";
 import ElasticSlider from "@/components/ui/ElasticSlider";
@@ -97,26 +97,32 @@ function PlayerControl() {
               style={{ animationPlayState: isPlaying ? 'running' : 'paused' }}>
             </img>
           </div>
-          <div className="inner-title">
-            <span className="song-name">{song.title}</span>
-            <div className="song-artist">{song.artist ? (<>{
-              song.artist.map(item => (
-                <>
-                  <Link>{item}</Link>
-                </>
-              ))
-            }</>) : (<>
-              Unknow
-            </>)}</div>
-          </div>
-          <div className="options">
-            <EllipsisVertical />
+          <div className="flex items-center gap-2 w-40">
+            <div className="inner-title">
+              <span className="song-name">{song.title}</span>
+              <div className="song-artist">{song.artist ? (<>{
+                song.artist.map((item, index) => (
+                  <div key={index} className="artist-item">
+                    <Link>{item}</Link>
+                  </div>
+                ))
+              }</>) : (<>
+                Unknow
+              </>)}</div>
+            </div>
+            <div className="options">
+              <EllipsisVertical />
+            </div>
           </div>
           <div className="flex-1 flex flex-col items-center justify-around gap-1">
             <div className="inner-button flex gap-4 items-center justify-center">
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <button><Heart /></button>
+                  <button>
+                    <Heart
+                      strokeWidth={1.5}
+                    />
+                  </button>
                 </TooltipTrigger>
                 <TooltipContent>
                   <p>Like</p>
@@ -125,7 +131,12 @@ function PlayerControl() {
 
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <button className="active:text-[var(--green-highlight)]"><SkipBack /></button>
+                  <button className="active:text-[var(--green-highlight)] active:[&>svg]:fill-[var(--green-highlight)]">
+                    <SkipBack
+                      strokeWidth={1.5}
+                      fill="var(--primary)"
+                    />
+                  </button>
                 </TooltipTrigger>
                 <TooltipContent>
                   <p>Previous</p>
@@ -134,9 +145,19 @@ function PlayerControl() {
 
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <button 
-                    className="border border-primary p-2 rounded-full hover:border-[var(--green-highlight)] hover:text-[var(--green-highlight)] transition-colors duration-300" 
-                    onClick={togglePlay}>{isPlaying ? <Pause /> : <Play />}
+                  <button
+                    className="border border-primary p-2 rounded-full hover:border-[var(--green-highlight)] hover:text-[var(--green-highlight)] hover:[&>svg]:fill-[var(--green-highlight)] transition-colors duration-300"
+                    onClick={togglePlay}
+                  >
+                    {isPlaying ?
+                      <Pause
+                        fill="var(--primary)"
+                        className="transition-colors duration-300"
+                      /> :
+                      <Play
+                        fill="var(--primary)"
+                        className="transition-colors duration-300"
+                      />}
                   </button>
                 </TooltipTrigger>
                 <TooltipContent>
@@ -146,7 +167,12 @@ function PlayerControl() {
 
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <button className="active:text-[var(--green-highlight)]"><SkipForward /></button>
+                  <button className="active:text-[var(--green-highlight)] active:[&>svg]:fill-[var(--green-highlight)]">
+                    <SkipForward
+                      strokeWidth={1.5}
+                      fill="var(--primary)"
+                    />
+                  </button>
                 </TooltipTrigger>
                 <TooltipContent>
                   <p>Next</p>
@@ -156,7 +182,10 @@ function PlayerControl() {
               <Tooltip>
                 <TooltipTrigger asChild>
                   <button onClick={() => toggleRepeat()} className="active:text-[var(--green-highlight)]">
-                    <Repeat color={enableRepeat? "var(--green-highlight)" : "var(--primary)"}/>
+                    <Repeat2
+                      strokeWidth={1.5}
+                      color={enableRepeat ? "var(--green-highlight)" : "var(--primary)"}
+                    />
                   </button>
                 </TooltipTrigger>
                 <TooltipContent>
@@ -192,7 +221,7 @@ function PlayerControl() {
                   clearMediaSession()
                   dispatch(removeSong())
                 }}>
-                  <X className="size-3 hover:text-destructive"/>
+                  <X className="size-3 hover:text-destructive" />
                 </button>
               </TooltipTrigger>
               <TooltipContent>

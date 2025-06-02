@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+  </head>
+  <body>
+    <style>
+      /* From Uiverse.io by Praashoo7 */ 
+.main {
+  background-color: white;
+  padding: 1em;
+  padding-bottom: 1.1em;
+  border-radius: 15px;
+  margin: 1em;
+}
+
+.loader {
+  display: flex;
+  flex-direction: row;
+  height: 4em;
+  padding-left: 1em;
+  padding-right: 1em;
+  transform: rotate(180deg);
+  justify-content: right;
+  border-radius: 10px;
+  transition: .4s ease-in-out;
+}
+
+.loader:hover {
+  cursor: pointer;
+  background-color: lightgray;
+}
+
+.currentplaying {
+  display: flex;
+  margin: 1em;
+}
+
+.spotify {
+  width: 50px;
+  height: 50px;
+  margin-right: 0.6em;
+}
+
+.heading {
+  color: black;
+  font-size: 1.1em;
+  font-weight: bold;
+  align-self: center;
+}
+
+.loading {
+  display: flex;
+  margin-top: 1em;
+  margin-left: 0.3em;
+}
+
+.load {
+  width: 2px;
+  height: 33px;
+  background-color: limegreen;
+  animation: 1s move6 infinite;
+  border-radius: 5px;
+  margin: 0.1em;
+}
+
+.load:nth-child(1) {
+  animation-delay: 0.2s;
+}
+
+.load:nth-child(2) {
+  animation-delay: 0.4s;
+}
+
+.load:nth-child(3) {
+  animation-delay: 0.6s;
+}
+
+@keyframes move6 {
+  0% {
+    height: 0.2em;
+  }
+
+  25% {
+    height: 0.7em;
+  }
+
+  50% {
+    height: 1.5em;
+  }
+
+  100% {
+    height: 0.2em;
+  }
+}
+    </style>
+    <!-- From Uiverse.io by Praashoo7 -->
+    <div class="main">
+      
+      <div class="loader">
+        <div class="song">
+          <p class="name">Time in a Bottle</p>
+          <p class="artist">Jim Corce</p>
+        </div>
+        <div class="albumcover"></div>
+        <div class="loading">
+          <div class="load"></div>
+          <div class="load"></div>
+          <div class="load"></div>
+          <div class="load"></div>
+        </div>
+      </div>
+      <div class="loader">
+        <div class="song">
+          <p class="name">My Way</p>
+          <p class="artist">Frank Sinatra</p>
+        </div>
+        <div class="albumcover"></div>
+        <div class="play"></div>
+      </div>
+      <div class="loader">
+        <div class="song">
+          <p class="name">Lemon Tree</p>
+          <p class="artist">Fools Garden</p>
+        </div>
+        <div class="albumcover"></div>
+        <div class="play"></div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -28,8 +28,10 @@ function Genre() {
 
 	return genreList ? (
 		<>
-			<CreateGenre onReload={handleReload} />
-			<Pagination objectPagination={genreData.objectPagination}/>
+			<div className="flex items-center justify-between mb-4">
+				<h1>List Genre</h1>
+				<CreateGenre onReload={handleReload} />
+			</div>	
 			<GenreList data={genreList} />
 			<Pagination objectPagination={genreData.objectPagination}/>
 		</>

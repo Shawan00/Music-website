@@ -8,7 +8,7 @@ import AppSidebar from "../AppSidebar"
 function UserLayout() {
   return (
     <>
-      <SidebarProvider>
+      <SidebarProvider defaultOpen={false}>
         <AppSidebar/>
         <main className="w-full">          
           <Header/>

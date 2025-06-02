@@ -1,3 +1,5 @@
+import { toast } from "react-toastify";
+
 export const capitalizeFirstLetter = (str) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
@@ -23,4 +25,18 @@ export const formatTimeMinute = (time) => {
 
 export const resizeImage = (img, width) => {
   return img.replace('upload/', `upload/c_limit,w_${width}/f_auto/`);
+}
+
+export const showToast = (message, type = "success", theme) => {
+  message = capitalizeFirstLetter(message);
+  toast[type](message, {
+    position: "top-right",
+    autoClose: 3000,
+    hideProgressBar: true,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: theme || "light",
+  });
 }

@@ -13,6 +13,9 @@ export async function uploadFile(file) {
     const response = await axios.post(api, data);
     return response;
   } catch (error) {
-    console.log(error);
+    return {
+      status: 500,
+      message: "Error uploading file",
+    }
   }
 }

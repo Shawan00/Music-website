@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import SugesstedSong from "../../../components/User/SugesstedSong";
 
 function HomePage() {
@@ -5,9 +6,13 @@ function HomePage() {
 
   return (
     <>
-      HomePage User
-      <h3>Recommended for youuu</h3>
-      <SugesstedSong/>
+      <Button 
+        variant="link"
+        className="p-0 h-fit"
+      >
+        <h2>Recommended for you</h2>
+      </Button>
+      <SugesstedSong />
     </>
   )
 }
