@@ -84,6 +84,8 @@
   --green-highlight: #28ce62;
   --player-bg: #f4fffc;
   --green-bg: #18b351;
+  --secondary-green-bg: #b7e1c1;
+  --main-green: #56c45f;
 }
 
 .dark {
@@ -124,6 +126,8 @@
   --green-highlight: oklch(0.7 0.1 148.82);
   --player-bg: #19342c;
   --green-bg: #2bd268;
+  --secondary-green-bg: #2a6b3b;
+  --main-green: #30b73c;
 }
 
 @layer base {

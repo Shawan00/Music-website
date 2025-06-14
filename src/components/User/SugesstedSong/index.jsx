@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { getSuggestedSongs } from '../../../services/User/userService';
+import { getSuggestedSongs } from '../../../services/Client/publicService';
 import { resizeImage } from '../../../helpers';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectSong } from '../../../features/playerControl/playerControlSlice';

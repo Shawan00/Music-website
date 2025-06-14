@@ -1,11 +1,11 @@
 function Marker({size}) {
   return (
     <>
-      <div class="marker">
-        <div class="load"></div>
-        <div class="load"></div>
-        <div class="load"></div>
-        <div class="load"></div>
+      <div className="marker">
+        <div className="load"></div>
+        <div className="load"></div>
+        <div className="load"></div>
+        <div className="load"></div>
       </div>
     </>
   )

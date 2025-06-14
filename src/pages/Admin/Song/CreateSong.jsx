@@ -1,18 +1,16 @@
 import { memo, useState } from 'react';
-import { ToastContainer, toast } from 'react-toastify';
 import { uploadFile } from '../../../services/Admin/uploadFileService';
 import { postSong } from '../../../services/Admin/songService';
-import { useTheme } from '@/components/theme/theme-provider';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import SubmitButton from '@/components/SubmitButton';
 import { defaultImage } from '@/helpers/defaultImage';
 import { Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { showToast } from '@/helpers';
 
 function CreateSong(props) {
   const { onReload } = props;
-  const { theme } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
   const [thumbnailPreview, setThumbnailPreview] = useState(null);
   const [backgroundPreview, setBackgroundPreview] = useState(null);
@@ -56,32 +54,13 @@ function CreateSong(props) {
   const handleSubmit = async () => { // gửi dữ liệu lên server
     const response = await postSong(formData);
     if (response.data.code === 200) {
-      toast.success('Create song successfully!', {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: theme,
-      });
+      showToast("Create song successfully!", 'success');
       onReload();
       setIsOpen(false);
       clearPreviews();
     } else {
-      toast.error(response.data.message, {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: theme,
-      });
+      showToast(response.data.message, 'error')
     }
-    onReload();
   }
 
   const clearPreviews = () => {
@@ -100,7 +79,6 @@ function CreateSong(props) {
 
   return (
     <>
-      <ToastContainer />
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>
           <Button className="text-lg text-secondary py-5 flex items-center">

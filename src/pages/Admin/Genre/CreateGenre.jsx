@@ -1,5 +1,4 @@
 import { memo, useState } from 'react';
-import { ToastContainer } from 'react-toastify';
 import { useTheme } from '@/components/theme/theme-provider';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -25,7 +24,6 @@ function CreateGenre(props) {
 
   return (
     <>
-      <ToastContainer />
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>
           <Button className="text-lg text-secondary py-5 flex items-center">

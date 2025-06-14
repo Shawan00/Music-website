@@ -6,15 +6,18 @@ import Modal from 'react-modal'
 import React from 'react'
 import { Provider } from 'react-redux'
 import { store } from './app/store.js'
+import { AuthProvider } from './context/auth.context'
 
 Modal.setAppElement('#root')
 const strictMode = true
 
 const app = (
   <Provider store={store}>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </AuthProvider>
   </Provider>
 )
 

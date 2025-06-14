@@ -3,7 +3,6 @@ import { getSong } from "../../../services/Admin/songService";
 import { useSearchParams } from "react-router-dom";
 import SongList from "./SongList";
 import CreateSong from "./CreateSong";
-import UpdateSong from "./UpdateSong";
 import Pagination from "@/components/Admin/Pagination";
 
 function Song() {
@@ -16,32 +15,37 @@ function Song() {
 
 	useEffect(() => {
 		document.title = "Manage song | Music project";
+	}, [])
+
+	useEffect(() => {
 		const getData = async () => {
 			const res = await getSong(page, pageSize, "createdAt", "desc");
+			console.log(res);
 			setSongData(res.data);
 		}
 		getData();
 	}, [page, pageSize, reload]);
 
-	const handleReload = useCallback(() => { // Hàm này sẽ được gọi khi tạo mới hoặc cập nhật bài hát
+	const handleReload = () => { // Hàm này sẽ được gọi khi tạo mới hoặc cập nhật bài hát
 		setReload(!reload);
-	}, []);
+	};
 
-	return songList ? (
+	return (
 		<>
 			<div className="flex items-center justify-between mb-4">
 				<h1>List Song</h1>
 				<CreateSong onReload={handleReload} />
 			</div>
-			<SongList data={songData.data} />
-			{/* <Pagination objectPagination={songData.objectPagination}/> */}
-			<UpdateSong />
+			{songList ? (
+				<>
+					<SongList data={songData.data} onReload={handleReload} />
+					{/* <Pagination objectPagination={songData.objectPagination}/> */}
+				</>
+			) : (
+				<>Loading</>
+			)}
 		</>
-	) : (
-		<>
-			Loading...
-		</>
-	);
+	)
 }
 
 export default Song

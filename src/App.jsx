@@ -1,8 +1,8 @@
-import AllAdminRoutes from './components/Admin/AllRoute'
+import { ToastContainer } from 'react-toastify'
 import { ThemeProvider } from './components/theme/theme-provider'
 import ClickSpark from './components/ui/ClickSpark'
 import { TooltipProvider } from './components/ui/tooltip'
-import AllUserRoutes from './components/User/AllRoutes'
+import { AllRoutes } from './routes'
 
 function App() {
   return (
@@ -16,11 +16,11 @@ function App() {
           duration={400}
         >
           <TooltipProvider>
-            <AllUserRoutes/>
-            <AllAdminRoutes/>
+            <ToastContainer />
+            <AllRoutes />
           </TooltipProvider>
         </ClickSpark>
-        
+
       </ThemeProvider>
     </>
   )

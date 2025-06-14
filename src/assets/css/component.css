@@ -88,8 +88,9 @@
     @apply font-medium
   }
 
-  label input, label textarea {
-    @apply w-full p-3 border border-primary-foreground rounded-lg
+  label input:not([type="radio"]):not([type="checkbox"]),
+  label textarea {
+    @apply w-full p-3 border border-primary-foreground rounded-lg;
   }
 
   /* end input label */
@@ -186,4 +187,19 @@
   }
 
   /* end marker  */
+
+  /* input custom  */
+  .input-custom {
+    @apply relative mb-4
+  }
+
+  .input-custom input {
+    @apply w-full py-3 px-5 rounded-sm text-base font-medium
+      bg-border
+  }
+
+  .input-custom svg {
+    @apply absolute right-5 top-1/2 -translate-y-1/2
+  }
+  /* end input custom  */
 }

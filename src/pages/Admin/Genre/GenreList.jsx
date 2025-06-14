@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { BadgeCheck, BadgeX, Ellipsis } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import Actions from "@/components/ui/actions";
 
 function GenreList(props) {
   const genreList = props.data;
@@ -32,33 +33,7 @@ function GenreList(props) {
                     <p className="font-medium line-clamp-1">{genre.title}</p>
                     <p className="text-sm md:text-base text-muted-foreground line-clamp-3">{genre.description || "No description"}</p>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <button className="rounded-full p-1 transition-all duration-300 hover:bg-muted">
-                          <Ellipsis />
-                        </button>
-                      </DropdownMenuTrigger>
-
-                      <DropdownMenuContent 
-                        className='w-50'
-                        align="end"
-                        sideOffset={5}
-                      >
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuSeparator/>
-                        <DropdownMenuGroup>
-                          <DropdownMenuItem>
-                            Edit
-                          </DropdownMenuItem>
-                          <DropdownMenuItem className='text-destructive'>
-                            Delete
-                          </DropdownMenuItem>
-                        </DropdownMenuGroup>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-
-                  </div>
+                  <Actions />
                 </div>
                 <div className="size-30 sm:size-40 flex items-center justify-center overflow-hidden rounded-sm border">
                   <img

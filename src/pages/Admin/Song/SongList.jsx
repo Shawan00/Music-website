@@ -1,9 +1,14 @@
+import Actions from "@/components/ui/actions";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { resizeImage } from "@/helpers";
-import { memo } from "react";
+import { memo, useState } from "react";
+import DeleteSong from "./DeleteSong";
+import UpdateSong from "./UpdateSong";
 
-function SongList(props) {
-  const songList = props.data;
+function SongList({data, onReload}) {
+  const songList = data;
+  const [updateSong, setUpdateSong] = useState(null);
+  const [deleteSongId, setDeleteSongId] = useState(null);
 
   if (!songList || songList.length === 0) {
     return <div className="text-center">No songs available</div>;
@@ -18,13 +23,13 @@ function SongList(props) {
             <TableHead>Album</TableHead>
             <TableHead>Genre</TableHead>
             <TableHead>Status</TableHead>
-            <TableHead></TableHead>
+            <TableHead className='w-auto'></TableHead>
           </TableRow>
         </TableHeader>
 
         <TableBody>
           {songList.map((song) => (
-            <TableRow key={song.id}>
+            <TableRow key={song._id}>
               <TableCell>
                 <div className="flex gap-4">
                   <div className="inner-image">
@@ -48,10 +53,29 @@ function SongList(props) {
               <TableCell>
                 <span className="text-sm text-muted-foreground">{song.status}</span>
               </TableCell>
+              <TableCell className="text-center px-1 w-[1%]">
+                <Actions 
+                  vertical
+                  song={song}
+                  setDeleteSongId={setDeleteSongId}
+                  setUpdateSong={setUpdateSong}
+                />
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
+      
+      <DeleteSong
+        songId={deleteSongId}
+        setSongId={setDeleteSongId}
+        onReload={onReload}
+      />
+      <UpdateSong 
+        song={updateSong}
+        setSong={setUpdateSong}
+        onReload={onReload}
+      />
     </>
   );
 }
