@@ -7,7 +7,7 @@ import { AuthContext } from "@/context/auth.context";
 
 function AdminLayout() {
   const { user } = useContext(AuthContext)
-console.log(user)
+
   if (!user) {
     return (
       <Navigate to="/admin/login" />

@@ -1,6 +1,8 @@
 import InputCustom from "@/components/ui/inputCustom";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { showToast } from "@/helpers";
 import { hasLowercase, hasMinLength, hasNumber, hasSpecialChar, hasUppercase, validateEmail } from "@/helpers/validation";
+import { clientRegister } from "@/services/Auth/authService";
 import { BadgeCheck, BadgeX, EyeClosed, Mail, User } from "lucide-react";
 import { useState } from "react";
 
@@ -12,7 +14,7 @@ const validatePasswordConditions = {
   specialChar: 'At least one special character',
 }
 
-function RegisterForm() {
+function RegisterForm({setRegisterFalse}) {
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -145,8 +147,14 @@ function RegisterForm() {
     }
   }
 
-  const handleSubmit = () => {
-    console.log("Registration data:", formData);
+  const handleSubmit = async () => {
+    const response = await clientRegister(formData)
+    if (response.status === 201) {
+      showToast(response.data.message, 'success')
+      setRegisterFalse()
+    } else {
+      showToast(response.data.message, 'error')
+    }
   }
 
 

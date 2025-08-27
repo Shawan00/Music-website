@@ -13,24 +13,23 @@ const menuItems = [
   },
   {
     title: "Playlists",
-    url: "/playlists",
+    url: "/playlist",
     icon: ListMusic
   },
   {
     title: "Liked Songs",
-    url: "/liked-songs",
+    url: "/liked-song",
     icon: Heart
   },
   {
     title: "Top Hits",
-    url: "/top-hits",
+    url: "/top-hit",
     icon: ChartBarDecreasing
   }
 ]
 
 function AppSidebar() {
   const location = useLocation();
-  console.log("AppSidebar location: ", location.pathname);
 
   return (
     <Sidebar collapsible="icon" >
@@ -46,17 +45,17 @@ function AppSidebar() {
             <SidebarMenu>
               {menuItems.map((item, index) => (
                 <SidebarMenuItem key={index}>
-                  <SidebarMenuButton 
+                  <SidebarMenuButton
                     asChild
                     tooltip={{
                       children: item.title,
                       side: "right",
                       align: "center"
                     }}
-                    isActive={location.pathname === item.url}                
+                    isActive={location.pathname === item.url}
                   >
                     <Link to={item.url} className="gap-4">
-                      <item.icon className="!w-7 !h-7 shrink-0"/>
+                      <item.icon className="!w-7 !h-7 shrink-0" />
                       <span className="text-base font-medium">{item.title}</span>
                     </Link>
                   </SidebarMenuButton>
@@ -67,24 +66,20 @@ function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter>
-        <>
-          <>
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild
-                  tooltip="Settings"
-                >
-                  <Link to="settings" className="gap-4">
-                    <Settings className="!w-6 !h-6 shrink-0" fill="transparent"/>
-                    <span className="text-base font-base">Settings</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </>
-        </>
-      </SidebarFooter>
+      {/* <SidebarFooter>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild
+              tooltip="Settings"
+            >
+              <Link to="settings" className="gap-4">
+                <Settings className="!w-6 !h-6 shrink-0" fill="transparent" />
+                <span className="text-base font-base">Settings</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter> */}
     </Sidebar>
   );
 }

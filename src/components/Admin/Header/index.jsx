@@ -1,7 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ModeToggle } from "@/components/ModeToggle"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { useIsMobile } from "@/hooks/use-mobile"
 import { LifeBuoy, LogOut, User, UserPlus, Users } from "lucide-react";
 import { useContext } from "react";
 import { AuthContext } from "@/context/auth.context";

@@ -1,4 +1,3 @@
-import { useTheme } from "@/components/theme/theme-provider";
 import { toast } from "react-toastify";
 
 
@@ -17,6 +16,14 @@ export const formatDate = (date) => {
 
   return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
 };
+
+// chuyển từ "2025-06-14T14:18:33.664Z" thành June 14, 2025
+export const formatDateToString = (date) => {
+  const d = new Date(date);
+  const options = { year: 'numeric', month: 'long', day: 'numeric' };
+  return d.toLocaleDateString('en-US', options);
+}
+
 
 export const formatTimeMinute = (time) => {
   if (isNaN(time)) return "00:00";
@@ -55,4 +62,37 @@ export const getAvatarFallback = (name) => {
   const last = words.length > 1 ? words[words.length - 1][0].toUpperCase() : '';
 
   return first + last;
+}
+
+// hàm tách phần nghìn của số bởi dấu chấm
+export const formatNumberWithDots = (number) => {
+  if (isNaN(number)) return number;
+  return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+// hàm phân tích file LRC thành mảng các dòng lời bài hát
+export const parseLRC = (lrcText) => {
+  const lines = lrcText.split('\n');
+  const lyricsArray = [];
+  const regex = /^\[(?<time>\d{2}:\d{2}\.\d{2})\](?<text>.*)/;
+
+  for (const line of lines) {
+    const match = line.match(regex);
+    if (match) {
+      const { time, text } = match.groups;
+      const [minutes, seconds] = time.split(':');
+      const totalSeconds = parseInt(minutes) * 60 + parseFloat(seconds);
+      lyricsArray.push({ time: totalSeconds, text: text.trim() });
+    }
+  }
+  return lyricsArray;
+};
+
+export async function copyToClipboard(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+    showToast("Copied to clipboard", "success");
+  } catch {
+    showToast("Failed to copy to clipboard", "error");
+  }
 }

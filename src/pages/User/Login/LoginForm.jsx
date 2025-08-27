@@ -1,13 +1,42 @@
 import InputCustom from "@/components/ui/inputCustom";
 import { EyeClosed, Mail } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { BiLogoFacebook, BiLogoGithub, BiLogoGoogle } from "react-icons/bi";
+import { useContext, useState } from "react";
+import { AuthContext } from "@/context/auth.context";
+import { clientLogin } from "@/services/Auth/authService";
+import { showToast } from "@/helpers";
 
 
 function LoginForm() {
-  const handleLogin = () => {
-    // Logic for handling login
-    console.log("Login button clicked");
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  })
+  const {setUser} = useContext(AuthContext)
+  const navigate = useNavigate()
+
+  const handleChange = (e) => {
+    const {name, value} = e.target
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }))
+  }
+
+  const handleLogin = async () => {
+    const response = await clientLogin(formData)
+    console.log(response)
+    if (response.status === 200) {
+      setUser({
+        accessToken: response.data.accessToken,
+        userInfo: response.data.user
+      })
+      showToast(response.data.message, 'success')
+      navigate('/')
+    } else {
+      showToast(response.data.message, 'error')
+    }
   }
 
   return (
@@ -18,16 +47,16 @@ function LoginForm() {
           type="email"
           placeholder="Email"
           name="email"
-          value=""
-          handleChange={() => { }}
+          value={formData.email}
+          handleChange={handleChange}
           icon={<Mail />}
         />
         <InputCustom
           type="password"
           placeholder="Password"
           name="password"
-          value=""
-          handleChange={() => { }}
+          value={formData.password}
+          handleChange={handleChange}
           icon={<EyeClosed />}
         />
         <div className="forgot">

@@ -23,7 +23,7 @@ function DeleteSong({ songId, setSongId, onReload }) {
           <DialogHeader>
             <DialogTitle>Delete Song</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete this song? Id = {songId}. This action cannot be undone.
+              Are you sure you want to delete this song? This action cannot be undone.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>

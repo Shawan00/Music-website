@@ -1,16 +1,17 @@
 import { useEffect, useState } from 'react'
-import { getSuggestedSongs } from '../../../services/Client/publicService';
+import { getSuggestedSongs } from '../../../services/Client/songService';
 import { resizeImage } from '../../../helpers';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectSong } from '../../../features/playerControl/playerControlSlice';
 import Marker from '../Marker';
-import { Ellipsis, EllipsisVertical } from 'lucide-react';
+import SongOptions from '../SongOptions';
+import { Skeleton } from '@/components/ui/skeleton';
 
 function SugesstedSong() {
   const [sugesstedSongs, setSuggesstedSong] = useState(null);
   const dispatch = useDispatch();
   const currentSong = useSelector(state => state.playerControl.song);
-  console.log(currentSong);
+  const [selectedSong, setSelectedSong] = useState(null);
 
   useEffect(() => {
     const getData = async () => {
@@ -18,15 +19,15 @@ function SugesstedSong() {
       setSuggesstedSong(response.data.data);
     }
     getData();
-  },[])
+  }, [])
 
   return sugesstedSongs ? (
     <>
       <div className='sugessted-song'>
         {sugesstedSongs.map((item, index) => (
-          <div 
-            className={`song-item ${item._id === currentSong?._id ? "active" : ""}`} 
-            key={index} 
+          <div
+            className={`song-item ${item._id === currentSong?._id ? "active" : item._id === selectedSong?._id ? "bg-muted" : ""}`}
+            key={index}
             onClick={() => dispatch(selectSong(item))}
           >
             <div className='image'>
@@ -39,15 +40,29 @@ function SugesstedSong() {
             {item._id === currentSong?._id && (
               <Marker />
             )}
-            <div className="options">
-              <EllipsisVertical strokeWidth={1.5} size={20} />
+            <div className={`options ${selectedSong?._id === item._id ? "visible" : ""}`}
+              tabIndex={0}
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+              onMouseEnter={() => setSelectedSong(item)}
+              onMouseLeave={() => setSelectedSong(null)}
+            >
+              <SongOptions song={item} />
             </div>
           </div>
         ))}
       </div>
     </>
   ) : (
-    <>Loading...</>
+    <div className='sugessted-song'>
+      <Skeleton className="h-18"/>
+      <Skeleton className="h-18"/>
+      <Skeleton className="h-18"/>
+      <Skeleton className="h-18"/>
+      <Skeleton className="h-18"/>
+      <Skeleton className="h-18"/>
+    </div>
   );
 }
 

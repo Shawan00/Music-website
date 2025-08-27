@@ -20,7 +20,6 @@ function Song() {
 	useEffect(() => {
 		const getData = async () => {
 			const res = await getSong(page, pageSize, "createdAt", "desc");
-			console.log(res);
 			setSongData(res.data);
 		}
 		getData();

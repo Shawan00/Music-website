@@ -10,9 +10,9 @@ function UserLayout() {
     <>
       <SidebarProvider defaultOpen={false}>
         <AppSidebar/>
-        <main className="w-full">          
+        <main className="w-full h-screen flex flex-col">          
           <Header/>
-          <div className="container-custom min-h-[calc(100vh-90px)]">
+          <div className="container-custom flex-1 min-h-0 min-w-0 overflow-auto">
             <Outlet/>
             <Footer/>
           </div>

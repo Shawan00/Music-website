@@ -1,6 +1,6 @@
 @layer components {
   .container-custom {
-    @apply block w-full max-w-[97%] md:max-w-[96%] lg:max-w-[94%] mx-auto
+    @apply px-3 sm:px-7 md:px-9 lg:px-12
   }
 
   .container-custom-sm {
@@ -8,12 +8,12 @@
   }
 
   header.header-user {
-    @apply w-full py-2 bg-background sticky top-0 left-0 z-50 flex justify-between items-center
+    @apply w-full py-2 bg-background top-0 left-0 z-50 flex justify-between items-center
   }
 
   /* player-control */
   .player-control {
-    @apply sticky bottom-0 left-0 z-50 w-full h-[90px] bg-no-repeat bg-cover bg-center
+    @apply bottom-0 left-0 z-50 w-full h-[90px] bg-no-repeat bg-cover bg-center
   }
 
   .player-control .inner-rounded-thumbnail {
@@ -54,6 +54,49 @@
 
   /* end player-control */
 
+  /* song item  */
+  .song-item {
+    @apply flex items-center justify-between gap-3 p-3 rounded-sm bg-background cursor-pointer hover:bg-muted transition-colors duration-300
+  }
+
+  .song-item .image {
+    @apply size-[60px] rounded-[3px] overflow-hidden flex justify-between items-center
+  }
+
+  .song-item .image img {
+    @apply w-full object-cover aspect-square;
+  }
+
+  .song-item .info {
+    @apply flex-1 flex flex-col gap-1
+  }
+
+  .song-item .info .title {
+    @apply font-medium text-foreground
+  }
+
+  .song-item .info .artist {
+    @apply text-muted-foreground
+  }
+
+  .song-item.active {
+    @apply bg-green-100 dark:bg-green-900
+  }
+
+  .song-item.active .title {
+    @apply text-green-600 dark:text-green-400
+  }
+
+  .song-item .options {
+    @apply invisible pointer-events-none transition-all duration-100
+  }
+
+  .song-item:hover .options {
+    @apply visible pointer-events-auto
+  }
+
+  /* end song item  */
+
   /* glass background */
   .glass-background {
     @apply backdrop-blur-2xl p-6 transition-colors duration-300 w-full h-full;
@@ -67,6 +110,10 @@
   .dark .glass-background {
     background-color: rgba(0, 0, 0, 0.75);
     /* Dark mode */
+  }
+
+  .overlay {
+    @apply absolute inset-0 h-full bg-gray-100 dark:bg-secondary opacity-80;
   }
 
   /* end glass background  */
@@ -194,12 +241,12 @@
   }
 
   .input-custom input {
-    @apply w-full py-3 px-5 rounded-sm text-base font-medium
-      bg-border
+    @apply w-full py-3 px-5 rounded-sm text-base font-medium bg-border
   }
 
   .input-custom svg {
     @apply absolute right-5 top-1/2 -translate-y-1/2
   }
+
   /* end input custom  */
 }

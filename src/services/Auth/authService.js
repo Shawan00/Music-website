@@ -17,3 +17,20 @@ export const adminRefreshToken = async () => {
   const response = await post("/admin/refreshToken")
   return response
 }
+
+export const clientLogin = async (data) => {
+  const response = await post('user/auth/login', data)
+  saveToLocalSorage(response)
+  return response
+}
+
+export const clientRegister = async (data) => {
+  const response = await post('user/auth/register', data)
+  console.log(data, response);
+  return response
+}
+
+export const clientRefreshToken = async () => {
+  const response = await post('user/auth/refreshToken')
+  return response
+}

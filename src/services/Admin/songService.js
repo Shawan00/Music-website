@@ -6,13 +6,13 @@ export async function getSong(page = 1, limit = 8, sortKey = "title", sortValue 
   return response;
 }
 
-export async function postSong(data) {
+export async function createSong(data) {
   const response = await post("admin/song/create", data);
   return response;
 }
 
-export async function patchSong(data) {
-  const response = await patch(`admin/song/update/${data.id}`, data);
+export async function updateSong(id, data) {
+  const response = await patch(`admin/song/update/${id}`, data);
   return response;
 }
 

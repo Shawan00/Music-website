@@ -36,19 +36,19 @@
   }
 
   h2 {
-    @apply mb-4 text-2xl font-medium
+    @apply mb-4 text-2xl font-medium line-clamp-1
   }
 
   h3 {
-    @apply mb-4 text-xl font-semibold
+    @apply mb-4 text-xl font-semibold line-clamp-1
   }
 
   h4 {
-    @apply text-lg font-medium
+    @apply text-lg font-medium line-clamp-1
   }
 
   h5 {
-    @apply text-base font-medium
+    @apply text-base font-medium line-clamp-1
   }
 
   input[type="number"]::-webkit-inner-spin-button,
@@ -59,5 +59,13 @@
 
   input[type="number"] {
     -moz-appearance: textfield;
+  }
+
+  .hide-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;  /* Chrome, Safari, Opera */
   }
 }

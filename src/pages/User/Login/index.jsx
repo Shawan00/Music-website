@@ -7,10 +7,12 @@ function Login() {
   const [isRegister, setIsRegister] = useState(false)
 
   const setRegisterTrue = () => {
+    document.title = 'Register | Music Project'
     setIsRegister(true);
   }
 
   const setRegisterFalse = () => {
+    document.title = 'Login | Music Project'
     setIsRegister(false);
   }
 
@@ -36,7 +38,7 @@ function Login() {
         </div>
 
         
-        <RegisterForm />
+        <RegisterForm setRegisterFalse={setRegisterFalse}/>
       </div>
 
     </div>

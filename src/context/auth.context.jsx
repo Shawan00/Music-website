@@ -6,9 +6,8 @@ export const AuthProvider = ({ children }) => {
   // lấy dữ liệu từ local storage
   const accessToken = localStorage.getItem('accessToken') + ""
   const userInfo = localStorage.getItem('userInfo')
-  const autoLogin = localStorage.getItem('rememberAdminLogin')
 
-  const initialUser = accessToken && userInfo && autoLogin ? {
+  const initialUser = accessToken && userInfo ? {
     accessToken,
     userInfo: JSON.parse(userInfo)
   } : null

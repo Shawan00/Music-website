@@ -1,4 +1,4 @@
-import { adminRefreshToken } from '@/services/Auth/authService';
+import { adminRefreshToken, clientRefreshToken } from '@/services/Auth/authService';
 import axios from 'axios';
 
 const preAIP = "http://localhost:3000/";
@@ -29,9 +29,8 @@ api.interceptors.response.use(function (response) {
     const originalRequest = error.config;
     error.config._retry = true;
     try {
-      const res = userInfo.type === 'admin' ? await adminRefreshToken() : "user"
+      const res = userInfo.type === 'admin' ? await adminRefreshToken() : await clientRefreshToken();
       const { accessToken } = res.data;
-
       localStorage.setItem('accessToken', accessToken);
 
       if (originalRequest.headers) {
@@ -50,7 +49,7 @@ api.interceptors.response.use(function (response) {
   return Promise.reject(error);
 });
 
-async function request(endpoint, method, data = null, headers = {}) {
+async function request(endpoint, method, data = null) {
   try {
     let config = {
       url: endpoint,
@@ -71,17 +70,14 @@ async function request(endpoint, method, data = null, headers = {}) {
   } catch (error) {
     console.log("API Erorr: ", error);
     return {
-      data: {
-        code: error.response?.status || error.code || 500,
-        message: error.response?.data?.message || error.message || 'Unknown error',
-      },
-      detail: error.response?.data?.details || null
+      status: error.response?.status || 500,
+      data: error.response?.data || { message: "An error occurred" }
     }
   }
 }
 
 export const get = (endpoint, params = {}) => request(endpoint, "GET", params);
-export const post = (endpoint, data, headers) => request(endpoint, "POST", data, headers);
-export const put = (endpoint, data, headers) => request(endpoint, "PUT", data, headers);
-export const patch = (endpoint, data, headers) => request(endpoint, "PATCH", data, headers);
+export const post = (endpoint, data) => request(endpoint, "POST", data);
+export const put = (endpoint, data) => request(endpoint, "PUT", data);
+export const patch = (endpoint, data) => request(endpoint, "PATCH", data);
 export const del = (endpoint) => request(endpoint, "DELETE");

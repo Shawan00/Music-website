@@ -1,9 +1,19 @@
-import SubmitButton from "@/components/SubmitButton";
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import SongForm from "@/components/Admin/SongForm";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { showToast } from "@/helpers";
 
 function UpdateSong({ song, setSong, onReload }) {
-  console.log(!!song)
+
+  const handleResponse = (type, message) => {
+    if (type === 'success') {
+      showToast(message || 'Song updated successfully!', type);
+      onReload();
+      setSong(null);
+    } else {
+      showToast(message || 'Failed to update song.', type);
+    }
+  }
+
   return (
     <>
       <Dialog open={!!song} onOpenChange={(open) => !open && setSong(null)}>
@@ -11,12 +21,11 @@ function UpdateSong({ song, setSong, onReload }) {
           <DialogHeader>
             <DialogTitle>Update Song</DialogTitle>
           </DialogHeader>
-          <DialogFooter>
-            <DialogClose asChild>
-              <Button variant="outline">Cancel</Button>
-            </DialogClose>
-            <SubmitButton />
-          </DialogFooter>
+
+          <SongForm
+            defaultValues={song}
+            sendResponseToParent={handleResponse}
+          />
         </DialogContent>
       </Dialog>
     </>

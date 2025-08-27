@@ -58,13 +58,13 @@
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
+  --muted-foreground: oklch(0.3 0 0);
   --accent: oklch(0.97 0 0);
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(0.922 0 0);
   --input: oklch(0.99 0 0);
-  --input-hover: oklch(0.98 0 0) ;
+  --input-hover: oklch(0.98 0 0);
   --ring: oklch(0.708 0 0);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
@@ -86,6 +86,8 @@
   --green-bg: #18b351;
   --secondary-green-bg: #b7e1c1;
   --main-green: #56c45f;
+  --blue-bg: #61b2ff;
+  
 }
 
 .dark {
@@ -97,7 +99,7 @@
   --popover-foreground: oklch(0.985 0 0);
   --primary: oklch(0.99 0 0);
   --primary-foreground: oklch(0.505 0 0);
-  --secondary: oklch(0.269 0 0);
+  --secondary: oklch(0.169 0 0);
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.35 0 0);
   --muted-foreground: #ababab;
@@ -125,16 +127,44 @@
   --green-hover: oklch(0.95 0.22 148.82);
   --green-highlight: oklch(0.7 0.1 148.82);
   --player-bg: #19342c;
-  --green-bg: #2bd268;
+  --green-bg: #25cc62;
   --secondary-green-bg: #2a6b3b;
   --main-green: #30b73c;
+  --blue-bg: #0074E0;
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/100;
   }
+
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground scroll-smooth;
   }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: rgba(107, 114, 128, 0.5);
+    border-radius: 8px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(107, 114, 128, 0.7);
+  }
+
+  /* Firefox */
+  html {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(107, 114, 128, 0.5) transparent;
+  }
+
 }
