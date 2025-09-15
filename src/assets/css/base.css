@@ -68,4 +68,10 @@
   .hide-scrollbar::-webkit-scrollbar {
     display: none;  /* Chrome, Safari, Opera */
   }
+
+  .text-stroke {
+    -webkit-text-stroke: 1px var(--color-accent-foreground);
+    opacity: 1;
+    color: transparent;
+  }
 }

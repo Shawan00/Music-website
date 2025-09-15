@@ -19,12 +19,12 @@ function Profile() {
 
   return (
     <>
-      <section className="flex gap-3 sm:gap-6 my-4 p-5 bg-linear-to-b from-[var(--green-bg)]/40 to-background rounded-lg">
+      <section className="flex flex-col sm:flex-row gap-3 sm:gap-6 my-4 p-5 bg-linear-to-b from-[var(--green-bg)]/40 to-background rounded-lg">
         <Avatar className="size-35 sm:size-50">
           <AvatarImage src={resizeImage(user.userInfo.avatar || "", 200)} />
           <AvatarFallback className="text-xl sm:text-4xl">{getAvatarFallback(user.userInfo.fullName)}</AvatarFallback>
         </Avatar>
-        <div className="flex-1 flex flex-col gap-2 sm:gap-3 self-end">
+        <div className="flex-1 flex flex-col gap-2 sm:gap-3 sm:self-end">
           <p className="font-medium">Profile</p>
           <h1>{user.userInfo.fullName}</h1>
           <div className="flex items-center gap-1 font-medium">

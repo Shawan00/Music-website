@@ -10,6 +10,11 @@ export const getAllFollowedPlaylist = async () => {
   return response;
 }
 
+export const getSuggestedPlaylist = async () => {
+  const response = await get("/playlist")
+  return response;
+}
+
 export const getPlaylistBySlug = async (slug) => {
   const response = await get(`/playlist/${slug}`);
   return response;
@@ -22,6 +27,11 @@ export const createPlaylist = async (data) => {
 
 export const addSongToPlaylist = async (playlistId, songId) => {
   const response = await post(`/playlist/${playlistId}/add/${songId}`);
+  return response;
+}
+
+export const removeSongFromPlaylist = async (playlistId, songId) => {
+  const response = await post(`/playlist/${playlistId}/remove/${songId}`);
   return response;
 }
 

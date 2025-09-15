@@ -1,5 +1,4 @@
 import { Outlet } from "react-router-dom"
-import Footer from "../Footer"
 import Header from "../Header"
 import PlayerControl from "../PlayerControl"
 import { SidebarProvider } from "@/components/ui/sidebar"
@@ -14,7 +13,6 @@ function UserLayout() {
           <Header/>
           <div className="container-custom flex-1 min-h-0 min-w-0 overflow-auto">
             <Outlet/>
-            <Footer/>
           </div>
           <PlayerControl/>             
         </main>

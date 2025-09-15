@@ -26,7 +26,6 @@ export const clientLogin = async (data) => {
 
 export const clientRegister = async (data) => {
   const response = await post('user/auth/register', data)
-  console.log(data, response);
   return response
 }
 

@@ -1,6 +1,6 @@
 import { del, get, patch, post } from "@/utils/request"
 
-export const getAllAlbums = async () => {
+export const getMyAlbums = async () => {
   const res = get("/album")
   return res
 }

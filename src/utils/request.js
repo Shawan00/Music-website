@@ -1,4 +1,4 @@
-import { adminRefreshToken, clientRefreshToken } from '@/services/Auth/authService';
+import { clientRefreshToken } from '@/services/Auth/authService';
 import axios from 'axios';
 
 const preAIP = "http://localhost:3000/";
@@ -23,13 +23,13 @@ api.interceptors.response.use(function (response) {
   // Do nothing with response data
   return response;
 }, async function (error) {
+  
   if (!error.config._retry) {
-    const userInfo = JSON.parse(localStorage.getItem("userInfo"))
     
     const originalRequest = error.config;
     error.config._retry = true;
     try {
-      const res = userInfo.type === 'admin' ? await adminRefreshToken() : await clientRefreshToken();
+      const res = await clientRefreshToken();
       const { accessToken } = res.data;
       localStorage.setItem('accessToken', accessToken);
 
@@ -42,7 +42,7 @@ api.interceptors.response.use(function (response) {
       console.error('Refresh token failed:', error);
       localStorage.removeItem('accessToken');
       localStorage.removeItem('user');
-      window.location.href = user.role === "admin" ? "/admin/login" : "/login";
+      window.location.href = "/login";
       return Promise.reject(error);
     }
   }

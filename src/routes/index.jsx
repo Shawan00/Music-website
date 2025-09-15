@@ -18,6 +18,8 @@ import ArtistLayout from "@/components/Artist/Layout";
 import ArtistAlbum from "@/pages/Artist/Album";
 import ArtistSong from "@/pages/Artist/Song";
 import Overview from "@/pages/Artist/Overview";
+import AlbumDetail from "@/pages/User/Album";
+import TopPlaylist from "@/pages/User/TopPlaylist";
 
 export const AllRoutes = () => {
   const routes = useRoutes([
@@ -64,6 +66,14 @@ export const AllRoutes = () => {
         {
           path: 'profile/:id',
           element: <ProfileUser />
+        },
+        {
+          path: 'album/:id',
+          element: <AlbumDetail />
+        },
+        {
+          path: 'top-playlist/:slug',
+          element: <TopPlaylist />
         }
       ]
     },

@@ -26,11 +26,13 @@ function Header() {
   return (
     <>
       <header className="header-user container-custom">
-        <SidebarTrigger />
+        <div>
+          <SidebarTrigger className="block sm:hidden lg:block" />
+        </div>
         {isMobile ? (
           <>
             {/* Mobile */}
-            <Search className="box-content !w-6 !h-6 p-2 rounded-full active:bg-gray-300"
+            <Search className="box-content !w-6 !h-6 m-2 rounded-full active:bg-gray-300"
               onClick={() => setIsSearchOpen(true)}
             />
             <div className="w-100">
@@ -69,7 +71,7 @@ function Header() {
                       <User />
                       <span>Profile</span>
                     </DropdownMenuItem>
-                    <a href="/studio" target="_blank">
+                    <a href="/studio/album" target="_blank">
                       <DropdownMenuItem>
                         <FileMusic />
                         <span>Artist Studio</span>
@@ -100,7 +102,6 @@ function Header() {
             </>
           )}
           <ModeToggle />
-
         </div>
 
 

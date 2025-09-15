@@ -1,18 +1,19 @@
-import { Button } from "@/components/ui/button";
 import SugesstedSong from "../../../components/User/SugesstedSong";
+import Banner from "./banner";
+import SuggestedPlaylist from "./suggestedPlaylist";
 
 function HomePage() {
   document.title = 'Home Page | Music Project';
 
   return (
     <>
-      <Button 
-        variant="link"
-        className="p-0 h-fit"
-      >
-        <h2>Recommended for you</h2>
-      </Button>
+      <Banner />
+
+      <h2>Recommended for you</h2>
       <SugesstedSong />
+
+      <h2>This is shared for you</h2>
+      <SuggestedPlaylist />
     </>
   )
 }

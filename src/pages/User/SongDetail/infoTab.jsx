@@ -1,6 +1,6 @@
 import { useTheme } from "@/components/theme/theme-provider";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { formatDateToString, formatNumberWithDots } from "@/helpers";
+import { formatDateToString, formatNumberWithDots, getAvatarFallback, resizeImage } from "@/helpers";
 import { defaultBackgroundSong, defaultBackgroundSongLight } from "@/helpers/defaultImage";
 import { Link } from "react-router-dom";
 
@@ -18,23 +18,19 @@ function InfoTab({ song }) {
       >
         <div className="overlay z-1"></div>
         <div className="gap-4 relative z-5">
-          <div className="flex flex-col lg:flex-row gap-6">
-            <div className="flex flex-col gap-10">
-              <div className="flex flex-col items-center justify-center size-22 bg-[var(--blue-bg)] text-primary rounded-[50%]">
-                <span className="font-bold text-3xl">#1</span>
-                <span>Peak Pos.</span>
+          <div className="flex flex-col sm:flex-row gap-6">
+            <div className="flex flex-row sm:flex-col items-center sm:items-start gap-2 sm:gap-6 lg:gap-10">
+              <div className="flex flex-col items-center justify-center size-18 sm:size-22 bg-[var(--blue-bg)] text-primary rounded-[50%]">
+                <span className="font-bold text-xl sm:text-3xl">#1</span>
+                <span className="text-sm sm:text-base">Peak Pos.</span>
               </div>
               <div className="flex flex-col">
-                <span className="font-bold text-4xl">{formatNumberWithDots("1098146")}</span>
-                <span className="font-medium text-muted-foreground">Streams</span>
+                <span className="font-bold text-xl sm:text-4xl">{formatNumberWithDots(song.playCount)}</span>
+                <span className="font-medium text-muted-foreground text-sm sm:text-base">Streams</span>
               </div>
               <div className="flex flex-col">
-                <span className="font-bold text-4xl">{formatNumberWithDots("27146")}</span>
-                <span className="font-medium text-muted-foreground">Listeners</span>
-              </div>
-              <div className="flex flex-col">
-                <span className="font-bold text-4xl">{formatNumberWithDots(song.like)}</span>
-                <span className="font-medium text-muted-foreground">Likes</span>
+                <span className="font-bold text-xl sm:text-4xl">{formatNumberWithDots(song.like)}</span>
+                <span className="font-medium text-muted-foreground text-sm sm:text-base">Likes</span>
               </div>
             </div>
             <div className="main-info flex flex-col gap-4">
@@ -47,15 +43,31 @@ function InfoTab({ song }) {
               </div>
               <div className="flex flex-col gap-1">
                 <span className="text-xl font-bold">Artist</span>
-                <div className="flex flex-col items-center w-fit gap-1">
-                  <Avatar className="size-25">
-                    <AvatarImage src={song.artist?.avatar} />
-                    <AvatarFallback className="text-4xl">P</AvatarFallback>
-                  </Avatar>
-                  <Link
-                    className="font-semibold hover:underline"
-                  >Pháo
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 sm:gap-3">
+                  <Link to={`/profile/${song.artistId._id}`}
+                    className="flex flex-col items-center w-full gap-1 group"
+                  >
+                    <Avatar className="w-full h-auto aspect-square">
+                      <AvatarImage src={resizeImage(song.artistId.avatar || "")} className="w-full h-auto" />
+                      <AvatarFallback className="text-4xl">{getAvatarFallback(song.artistId.fullName)}</AvatarFallback>
+                    </Avatar>
+                    <p className="font-semibold group-hover:underline truncate">
+                      {song.artistId.fullName}
+                    </p>
                   </Link>
+                  {song.collaborationArtistIds && song.collaborationArtistIds.map((artist) => (
+                    <Link to={`/profile/${artist._id}`}
+                      className="flex flex-col items-center w-full gap-1 group"
+                    >
+                      <Avatar className="w-full h-auto aspect-square">
+                        <AvatarImage src={resizeImage(artist.avatar || "")} className="w-full h-auto" />
+                        <AvatarFallback className="text-4xl">{getAvatarFallback(artist.fullName)}</AvatarFallback>
+                      </Avatar>
+                      <p className="font-semibold group-hover:underline truncate">
+                        {artist.fullName}
+                      </p>
+                    </Link>
+                  ))}
                 </div>
               </div>
             </div>

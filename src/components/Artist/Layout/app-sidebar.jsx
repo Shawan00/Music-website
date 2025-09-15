@@ -6,11 +6,11 @@ import { useContext } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 const navMain = [
-  {
-    title: "Overview",
-    path: "/studio",
-    icon: LayoutDashboard
-  },
+  // {
+  //   title: "Overview",
+  //   path: "/studio",
+  //   icon: LayoutDashboard
+  // },
   {
     title: "Album",
     path: "/studio/album",

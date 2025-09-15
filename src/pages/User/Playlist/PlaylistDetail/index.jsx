@@ -20,7 +20,7 @@ function PlaylistDetail() {
   const { slug } = useParams();
   const dispatch = useDispatch();
   const [currentPlaylist, setCurrentPlaylist] = useState(null);
-  const { user } = useContext(AuthContext);
+  const { user, setUser } = useContext(AuthContext);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [following, setFollowing] = useState(false);
 
@@ -50,25 +50,44 @@ function PlaylistDetail() {
   }
 
   const isFollowing = () => {
-    return currentPlaylist.listFollowers.includes(user.userInfo._id);
+    if (!user) return false;
+    return user.userInfo.playlistsFollowed.includes(currentPlaylist._id);
+  }
+
+  const isOwnPlaylist = () => {
+    if (!user) return false;
+    return user.userInfo._id === currentPlaylist.idUser._id;
   }
 
   const handleFollowPlaylist = async () => {
-    if (!user) return;
+    if (!user) {
+      showToast("Please login to follow playlist", "error");
+      return;
+    }
     setFollowing(true);
     const res = await followPlaylist(currentPlaylist._id);
     if (res.status === 200) {
       showToast(res.data.message, "success");
       if (res.data.message === "Unfollow playlist successfully") {
-        setCurrentPlaylist(prev => ({
+        const newUserInfo = {
+          ...user.userInfo,
+          playlistsFollowed: user.userInfo.playlistsFollowed.filter(id => id !== currentPlaylist._id)
+        }
+        setUser(prev => ({
           ...prev,
-          listFollowers: prev.listFollowers.filter(id => id !== user.userInfo._id)
+          userInfo: newUserInfo
         }));
+        localStorage.setItem("userInfo", JSON.stringify(newUserInfo));
       } else {
-        setCurrentPlaylist(prev => ({
+        const newUserInfo = {
+          ...user.userInfo,
+          playlistsFollowed: [...user.userInfo.playlistsFollowed, currentPlaylist._id]
+        }
+        setUser(prev => ({
           ...prev,
-          listFollowers: [...prev.listFollowers, user.userInfo._id]
+          userInfo: newUserInfo
         }));
+        localStorage.setItem("userInfo", JSON.stringify(newUserInfo));
       }
     } else {
       showToast("Failed to follow playlist", "error");
@@ -93,17 +112,17 @@ function PlaylistDetail() {
           <div className="flex items-center flex-wrap gap-1 sm:gap-2">
             <Avatar>
               <AvatarImage
-                src={resizeImage(currentPlaylist.user.avatar || "", 40)}
-                alt={currentPlaylist.user.fullName}
+                src={resizeImage(currentPlaylist.idUser.avatar || "", 40)}
+                alt={currentPlaylist.idUser.fullName}
               />
-              <AvatarFallback>{getAvatarFallback(currentPlaylist.user.fullName)}</AvatarFallback>
+              <AvatarFallback>{getAvatarFallback(currentPlaylist.idUser.fullName)}</AvatarFallback>
             </Avatar>
             <Link className="font-medium hover:underline"
-              to={`/profile/${currentPlaylist.user._id}`}
-            >{currentPlaylist.user.fullName}</Link>
+              to={`/profile/${currentPlaylist.idUser._id}`}
+            >{currentPlaylist.idUser.fullName}</Link>
             <Dot />
             <p>{currentPlaylist.songs.length} songs</p>
-            {user && user.userInfo._id === currentPlaylist.user._id ? (
+            {user && user.userInfo._id === currentPlaylist.idUser._id ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button type="button">
@@ -157,16 +176,25 @@ function PlaylistDetail() {
       </section>
 
       <section className="px-5 flex items-center gap-5 mb-5">
-        <button className="p-4 rounded-full bg-[var(--green-bg)]"
+        <button className="p-3 sm:p-4 rounded-full bg-[var(--green-bg)]"
           onClick={() => {
             dispatch(playPlaylist(currentPlaylist.songs))
           }}
         >
-          <Play fill="var(--secondary)" color="var(--secondary" />
+          <Play fill="var(--secondary)" color="var(--secondary)" />
         </button>
       </section>
 
-      <SongTable songs={currentPlaylist.songs} />
+      {isOwnPlaylist() ? (
+        <SongTable
+          songs={currentPlaylist.songs}
+          currentPlaylistId={currentPlaylist._id}
+          setCurrentPlaylist={setCurrentPlaylist}
+        />
+      ) : (
+        <SongTable songs={currentPlaylist.songs}/>
+      )}
+
     </>
   )
 }

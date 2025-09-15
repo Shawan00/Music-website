@@ -19,7 +19,7 @@ function Command({
     <CommandPrimitive
       data-slot="command"
       className={cn(
-        "border-2 border-border bg-input ease hover:bg-[var(--input-hover)] text-popover-foreground flex h-full w-full flex-col overflow-hidden rounded-full",
+        "border-2 border-border bg-input ease hover:bg-[var(--input-hover)] text-popover-foreground flex h-full w-full flex-col overflow-hidden rounded-sm",
         className
       )}
       {...props} />

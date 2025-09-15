@@ -10,11 +10,12 @@ import { showToast } from "@/helpers";
 
 function LoginForm() {
   const [formData, setFormData] = useState({
-    email: '',
-    password: ''
+    email: 'test@gmail.com',
+    password: 'Test@1234'
   })
   const {setUser} = useContext(AuthContext)
   const navigate = useNavigate()
+  const [pending, setPending] = useState(false);
 
   const handleChange = (e) => {
     const {name, value} = e.target
@@ -25,8 +26,8 @@ function LoginForm() {
   }
 
   const handleLogin = async () => {
+    setPending(true);
     const response = await clientLogin(formData)
-    console.log(response)
     if (response.status === 200) {
       setUser({
         accessToken: response.data.accessToken,
@@ -37,6 +38,7 @@ function LoginForm() {
     } else {
       showToast(response.data.message, 'error')
     }
+    setPending(false);
   }
 
   return (
@@ -59,14 +61,14 @@ function LoginForm() {
           handleChange={handleChange}
           icon={<EyeClosed />}
         />
-        <div className="forgot">
+        {/* <div className="forgot">
           <Link to="/forgot-password">
             Forgot Password?
           </Link>
-        </div>
-        <button type="submit">Login</button>
+        </div> */}
+        <button type="submit" disabled={pending}>{pending ? 'Logging in...' : 'Login'}</button>
       </form>
-      <div className="social-login">
+      {/* <div className="social-login">
         <p className="mb-4">Or login with social platforms</p>
         <div className="inner-social">
           <a href="#" className="google">
@@ -79,7 +81,7 @@ function LoginForm() {
             <BiLogoGithub />
           </a>
         </div>
-      </div>
+      </div> */}
     </div>
   )
 }

@@ -2,18 +2,19 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { selectSong } from "@/features/playerControl/playerControlSlice";
 import { getSongBySlug } from "@/services/Client/songService";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import LyricsTabs from "./lyricsTabs";
 import InfoTab from "./infoTab";
+import { useDispatch } from "react-redux";
+import AlbumTabs from "./albumTab";
 
 function SongDetail() {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [song, setSong] = useState(null);
+  const [searchParams] = useSearchParams();
   const slug = searchParams.get('slug');
-  const song = useSelector(state => state.playerControl.song);
-  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const footer = document.getElementById("footer");
@@ -27,33 +28,21 @@ function SongDetail() {
   }, []);
 
   useEffect(() => {
-    if (song && song.slug && song.slug !== slug) {
-      setSearchParams(prev => {
-        const next = new URLSearchParams(prev);
-        next.set("slug", song.slug);
-        return next;
-      }, { replace: true });
-    }
-  }, [song]);
-
-  useEffect(() => {
-    if (song && song.slug === slug) {
-     return; 
-    }
-
     const fetchSong = async () => {
       const response = await getSongBySlug(slug);
 
       if (response.status !== 200 || !response.data.data) {
         navigate("/404");
         return;
+      } else {
+        setSong(response.data.data);
+        dispatch(selectSong(response.data.data));
       }
 
-      dispatch(selectSong(response.data.data));
       document.title = response.data.data.title + " - Listening to Music";
     }
     fetchSong();
-  }, [])
+  }, [slug, searchParams, navigate, dispatch]);
 
   if (!song) {
     return (
@@ -76,7 +65,7 @@ function SongDetail() {
 
 
   return (
-    <div className="song-detail-page h-full ">
+    <div className="song-detail-page h-full">
       <Tabs defaultValue="lyrics" className="flex flex-col h-full">
         <TabsList className="w-[90%] md:w-[70%] lg:w-[50%] mx-auto">
           <TabsTrigger value="info">Info</TabsTrigger>
@@ -88,6 +77,15 @@ function SongDetail() {
         </TabsContent>
         <TabsContent value="lyrics" className="flex-1 overflow-hidden">
           <LyricsTabs lyricsUrl={song.lyrics} />
+        </TabsContent>
+        <TabsContent value="album" className="flex-1 overflow-hidden">
+          {song.albumId ? (
+            <AlbumTabs id={song.albumId._id} />
+          ) : (
+            <div className="flex flex-col items-center justify-center h-full">
+              <p className="text-muted-foreground">This song is not in any album</p>
+            </div>
+          )}
         </TabsContent>
       </Tabs>
     </div>

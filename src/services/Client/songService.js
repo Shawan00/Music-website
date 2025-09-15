@@ -17,12 +17,18 @@ export async function likeSong(slug) {
 }
 
 export async function getAllLikedSong() {
-  const response = await get("song/getLikedSongs");
+  const response = await get("song/getAllLike");
   return response;
 }
 
-export async function getAllArtistSong() {
-  const response = await get("/song/artist/my-song");
+export async function getTopHits(country) {
+  country = country.trim().replace(" ", "+");
+  const response = await get("song/top/plays?limit=100&country=" + country);
+  return response;
+}
+
+export async function getAllArtistSong(params) {
+  const response = await get("/song/artist/my-song", params);
   return response;
 }
 
@@ -38,13 +44,12 @@ export async function updateSong(id, data) {
 }
 
 export async function deleteSong(id) {
-  // const response = await del(`song/artist/delete-song/${id}`);
-  const response = {
-    status: 200,
-    data: {
-      message: "Song deleted successfully",
-      id
-    }
-  }
+  const response = await patch(`song/artist/update-song/${id}`, {
+    deleted: true
+  })
   return response;
+}
+
+export async function sendPlayedHistory(id, data) {
+  await post(`song/play/${id}`, data)
 }

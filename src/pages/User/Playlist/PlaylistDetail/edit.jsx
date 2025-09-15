@@ -50,8 +50,12 @@ function EditPlaylist({ playlist, setEditDialogOpen }) {
     const res = await updatePlaylist(playlist._id, formData);
     if (res.status === 200) {
       showToast("Playlist updated successfully", "success");
-      navigate(`/playlist/${res.data.playlist.slug}`);
       setEditDialogOpen(false);
+      if (playlist.slug !== res.data.playlist.slug) {
+        navigate(`/playlist/${res.data.playlist.slug}`);
+      } else {
+        navigate(0)
+      }
     } else {
       showToast(res.data.message || "Failed to update playlist", "error");
     }

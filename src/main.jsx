@@ -9,7 +9,7 @@ import { store } from './app/store.js'
 import { AuthProvider } from './context/auth.context'
 
 Modal.setAppElement('#root')
-const strictMode = true
+const strictMode = false
 
 const app = (
   <Provider store={store}>

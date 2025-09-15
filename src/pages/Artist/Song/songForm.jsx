@@ -1,19 +1,26 @@
 import SubmitButton from "@/components/SubmitButton";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
 import UploadButton from "@/components/ui/uploadButton";
+import { AuthContext } from "@/context/auth.context";
 import { showToast } from "@/helpers";
 import { genres } from "@/helpers/mockData";
 import { uploadFile } from "@/services/Admin/uploadFileService";
-import { getAllAlbums } from "@/services/Client/albumService";
+import { getMyAlbums } from "@/services/Client/albumService";
 import { createSong, updateSong } from "@/services/Client/songService";
-import { Check, Edit, Loader2, Plus } from "lucide-react";
-import { useEffect, useState } from "react";
+import { getAllArtists } from "@/services/Client/userArtistService";
+import { Check, ChevronDown, Edit, Loader2, Plus, X } from "lucide-react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function SongForm({ song = null, setSongs }) {
   const navigate = useNavigate();
+  const { user } = useContext(AuthContext);
   const [open, setIsOpen] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [formData, setFormData] = useState({
@@ -24,23 +31,32 @@ function SongForm({ song = null, setSongs }) {
     background: song?.background || undefined,
     genreId: song?.genreId || undefined,
     albumId: song?.albumId || undefined,
-    collaborationArtistIds: [],
+    collaborationArtistIds: song?.collaborationArtistIds || [],
     description: song?.description || "",
   })
   const [albums, setAlbums] = useState(null);
+  const [artists, setArtists] = useState(null);
 
   useEffect(() => {
     const fetchAlbums = async () => {
-      const res = await getAllAlbums();
+      const res = await getMyAlbums();
       if (res.status === 200) {
         setAlbums(res.data.albums);
       } else {
-        showToast(res.data.message, "error");
         setAlbums([]);
       }
     }
+    const fetchArtists = async () => {
+      const res = await getAllArtists();
+      if (res.status === 200) {
+        setArtists(res.data.artists.filter(artist => artist._id !== user.userInfo._id));
+      } else {
+        setArtists([]);
+      }
+    }
     fetchAlbums();
-  }, [])
+    fetchArtists();
+  }, [user])
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -90,11 +106,34 @@ function SongForm({ song = null, setSongs }) {
     }
   }
 
+  const handleCollaborationArtistChange = (artistId) => {
+    if (formData.collaborationArtistIds.includes(artistId)) {
+      setFormData({ ...formData, collaborationArtistIds: formData.collaborationArtistIds.filter(id => id !== artistId) })
+    } else {
+      setFormData({ ...formData, collaborationArtistIds: [...formData.collaborationArtistIds, artistId] })
+    }
+  }
+
+  const selectedArtists = () => {
+    if (formData.collaborationArtistIds.length === 0) return [];
+    return artists.filter(artist => formData.collaborationArtistIds.includes(artist._id));
+  }
+
+  if (!albums || !artists) return (
+    <div className="space-y-3">
+      <Skeleton className="w-full h-10" />
+      <Skeleton className="w-full h-10" />
+      <Skeleton className="w-full h-10" />
+      <Skeleton className="w-full h-10" />
+      <Skeleton className="w-full h-10" />
+    </div>
+  )
+
   return (
     <Dialog open={open} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         {song ? (
-          <Edit className="size-5 cursor-pointer"/>
+          <Edit className="size-5 cursor-pointer" />
         ) : (
           <Button>
             <Plus /> New Song
@@ -105,7 +144,7 @@ function SongForm({ song = null, setSongs }) {
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold">{song ? "Edit Song" : "New Song"}</DialogTitle>
         </DialogHeader>
-        <form action={handleSubmit} className="space-y-2  max-h-[60vh] overflow-y-auto">
+        <form action={handleSubmit} className="space-y-2 max-h-[60vh] overflow-y-auto">
           <label className="w-full">
             <span>Song Title</span>
             <input
@@ -232,6 +271,55 @@ function SongForm({ song = null, setSongs }) {
                 )}
               </SelectContent>
             </Select>
+          </label>
+          <label className="w-full">
+            <span>Collaboration Artists</span>
+            <DropdownMenu className="w-full">
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="outline"
+                  role="combobox"
+                  className="w-full border border-primary-foreground rounded-lg text-base !text-muted-foreground justify-between"
+                >
+                  {formData.collaborationArtistIds.length > 0 ? (
+                    <span>Selected {formData.collaborationArtistIds.length} {formData.collaborationArtistIds.length > 1 ? "artists" : "artist"}</span>
+                  ) : (
+                    <span>Select artists</span>
+                  )}
+                  <ChevronDown className="opacity-50" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="!w-full p-0" align="start">
+                <Command className="border-none rounded-xs w-full hover:bg-transparent">
+                  <CommandInput placeholder="Search artists..." />
+                  <CommandList>
+                    <CommandEmpty>No artist found.</CommandEmpty>
+                    <CommandGroup>
+                      {artists.map((artist) => (
+                        <CommandItem key={artist._id} value={artist.name}
+                          onSelect={() => handleCollaborationArtistChange(artist._id)}
+                        >
+                          <Checkbox
+                            checked={formData.collaborationArtistIds.includes(artist._id)}
+                          />
+                          {artist.fullName}
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <div className="flex flex-wrap gap-2">
+              {selectedArtists().map(artist => (
+                <div key={artist._id} className="bg-muted px-3 py-1 rounded-full text-sm flex items-center gap-1">
+                  {artist.fullName}
+                  <X className="h-4 w-4 cursor-pointer pt-1" 
+                    onClick={() => handleCollaborationArtistChange(artist._id)}
+                  />
+                </div>
+              ))}
+            </div>
           </label>
           <label className="w-full">
             <span>Description</span>

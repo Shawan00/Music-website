@@ -2,18 +2,21 @@ import { Slider } from '@/components/ui/slider';
 import { playNextSong } from '@/features/playerControl/playerControlSlice';
 import { formatTimeMinute } from '@/helpers';
 import eventBus from '@/helpers/eventBus';
+import { sendPlayedHistory } from '@/services/Client/songService';
 import { forwardRef, useRef, useEffect, useState, useImperativeHandle } from 'react';
 import { useDispatch } from 'react-redux';
 
 const ProgressBar = forwardRef((props, ref) => {
-  const { src, setPlayingState, volume } = props;
+  const { id, src, setPlayingState, volume } = props;
   const audioRef = useRef(null);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const isDragging = useRef(false);
   const isPlaying = useRef(true);
+  const listeningTime = useRef(0);
+  const startListeningTime = useRef(null);
   const dispatch = useDispatch();
-
+  
   const updateCurrentTime = () => { // cập nhật thanh tiến trình khi audio chạy
     if (!isDragging.current) { // không thực hiện cập nhật thanh tiến trình khi đang tua
       const audio = audioRef.current
@@ -25,7 +28,9 @@ const ProgressBar = forwardRef((props, ref) => {
   useEffect(() => { //thêm sự kiện play/pause, cập nhật thanh tiến trình
     const audio = audioRef.current;
     const handleLoadedMetadata = () => {
+      startListeningTime.current = Date.now();
       audio.play().catch(() => {
+        startListeningTime.current = null;
         isPlaying.current = false;
         setPlayingState(false)
       });
@@ -34,18 +39,20 @@ const ProgressBar = forwardRef((props, ref) => {
     }
 
     const handlePlay = () => {
+      startListeningTime.current = Date.now();
       isPlaying.current = true
       setPlayingState(true)
     }
 
     const handlePause = () => {
       isPlaying.current = false
+      listeningTime.current += Date.now() - startListeningTime.current;
       setPlayingState(false)
     }
 
     const handleEnded = () => {
-      if (audio.loop) return;
-      dispatch(playNextSong());
+      listeningTime.current += Date.now() - startListeningTime.current;
+      if (!audio.loop) dispatch(playNextSong());
     }
 
     const handleSeekForEvent = (time) => {
@@ -79,7 +86,7 @@ const ProgressBar = forwardRef((props, ref) => {
     audio.addEventListener('play', handlePlay);
     audio.addEventListener('pause', handlePause);
     audio.addEventListener('ended', handleEnded);
-    eventBus.on('clickLyrics', handleSeekForEvent)
+    eventBus.on('clickLyrics', handleSeekForEvent);
     //clean up
     return () => {
       audio.removeEventListener('timeupdate', updateCurrentTime);
@@ -87,7 +94,7 @@ const ProgressBar = forwardRef((props, ref) => {
       audio.removeEventListener('play', handlePlay);
       audio.removeEventListener('pause', handlePause);
       audio.removeEventListener('ended', handleEnded);
-      eventBus.off('clickLyrics', handleSeekForEvent)
+      eventBus.off('clickLyrics', handleSeekForEvent);
     }
   }, [])
 
@@ -95,6 +102,32 @@ const ProgressBar = forwardRef((props, ref) => {
     const audio = audioRef.current;
     audio.volume = volume / 100;
   }, [volume])
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    const handleSendPlayedHistory = async () => {
+      const playDuration = Math.floor(listeningTime.current / 1000);
+      listeningTime.current = 0;
+      if (playDuration > 0) {
+        await sendPlayedHistory(id, {
+          playDuration,
+          isCompleted: playDuration >= duration
+        })
+      }
+    }
+
+    audio.addEventListener('ended', handleSendPlayedHistory);
+
+    return () => {
+      audio.removeEventListener('ended', handleSendPlayedHistory);
+    }
+  }, [duration, id])
+
+  useEffect(() => {
+    if (startListeningTime.current) {
+      listeningTime.current = 0;
+    }
+  }, [id])
 
   //xử lý tua nhạc
   const handleSeek = (value) => {
@@ -134,6 +167,17 @@ const ProgressBar = forwardRef((props, ref) => {
       const audio = audioRef.current
       return audio.loop
     },
+    async handleSendPlayedHistory() { //gửi lịch sử nghe nhạc
+      listeningTime.current += isPlaying.current ? Date.now() - startListeningTime.current : 0;
+      const playDuration = Math.floor(listeningTime.current / 1000);
+      listeningTime.current = 0;
+      if (playDuration > 0) {
+        await sendPlayedHistory(id, {
+          playDuration,
+          isCompleted: playDuration >= duration
+        })
+      }
+    },
     cleanup() { //xoá media session khi tắt nhạc
       const audio = audioRef.current
       audio.pause()
@@ -151,7 +195,7 @@ const ProgressBar = forwardRef((props, ref) => {
         controls preload="metadata"
         autoPlay muted
       ></audio>
-      <div className="CurrentTime-bar flex items-center">
+      <div className="CurrentTime-bar flex items-center justify-center w-full">
         <span className='minute-second'>{formatTimeMinute(currentTime)}</span>
         <Slider
           defaultValue={[0]}
@@ -161,7 +205,7 @@ const ProgressBar = forwardRef((props, ref) => {
           onPointerDown={handleDragStart}
           onPointerUp={handleDragEnd}
           onValueChange={handleSeek}
-          className={`w-90 mx-2`}
+          className={`w-8/10 sm:w-90 lg:w-80 xl:w-90 mx-2`}
         />
         <span className="minute-second">{formatTimeMinute(duration)}</span>
       </div>

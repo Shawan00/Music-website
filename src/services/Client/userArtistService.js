@@ -1,5 +1,10 @@
 import { get, patch } from "@/utils/request"
 
+export const getAllArtists = async () => {
+  const res = await get(`user/artists`)
+  return res
+}
+
 export const updateProfile = async (profileData) => {
   const res = await patch(`user`, profileData)
   return res

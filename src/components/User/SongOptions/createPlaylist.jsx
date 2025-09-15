@@ -69,7 +69,7 @@ function CreatePlaylist({ defaultThumbnail, setPlaylists }) {
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger onSelect={() => setIsOpen(true)}>
           <div className="px-1.5 mx-1.5 py-1 mt-1 text-sm rounded-sm flex items-center gap-1 cursor-pointer hover:bg-muted">
-            <Plus /> New playlist
+            <Plus className="size-5" /> New playlist
           </div>
         </DialogTrigger>
         <DialogContent aria-describedby={undefined}>

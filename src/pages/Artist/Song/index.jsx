@@ -1,39 +1,68 @@
-import { formatDateToString, formatNumberWithDots, resizeImage } from "@/helpers";
+import { copyToClipboard, formatDateToString, formatNumberWithDots, resizeImage } from "@/helpers";
 import SongForm from "./songForm";
-import { useEffect, useState } from "react";
-import { Edit, Trash } from "lucide-react";
+import { useContext, useEffect, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { getAllArtistSong } from "@/services/Client/songService";
 import DeleteSong from "./delete";
+import { AuthContext } from "@/context/auth.context";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import Pagination from "@/components/Admin/Pagination";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { Copy } from "lucide-react";
+import VerifyArtist from "@/components/User/VerifyArtist";
 
 function ArtistSong() {
   const [songs, setSongs] = useState(null);
+  const [objectPagination, setObjectPagination] = useState(null);
+  const { user } = useContext(AuthContext)
+  const [searchParams] = useSearchParams();
+  const page = parseInt(searchParams.get("page")) || 1;
+  const pageSize = parseInt(searchParams.get("pageSize")) || 8;
+  const navigate = useNavigate()
+
+  if (!user) {
+    navigate("/login");
+  }
 
   useEffect(() => {
     document.title = "Songs - Artist Studio";
+  }, [])
+
+  useEffect(() => {
     const fetchSongs = async () => {
-      const res = await getAllArtistSong();
+      const res = await getAllArtistSong({
+        page: page,
+        limit: pageSize,
+        sortKey: "createdAt",
+        sortValue: "desc"
+      });
       if (res.status === 200) {
-        setSongs(res.data.data);
+        setSongs(res.data.songs);
+        setObjectPagination(res.data.pagination);
       } else {
         setSongs([]);
       }
     }
     fetchSongs();
-  }, [])
+  }, [page, pageSize])
+
+  if (!user.userInfo.verifyArtist) {
+    return <VerifyArtist profile={user.userInfo} />;
+  }
+
+  if (!songs) return (
+    <div className="w-full space-y-2">
+      <Skeleton className="w-full h-13" />
+      <Skeleton className="w-full h-13" />
+      <Skeleton className="w-full h-13" />
+      <Skeleton className="w-full h-13" />
+      <Skeleton className="w-full h-13" />
+      <Skeleton className="w-full h-13" />
+    </div>
+  )
 
   const renderSongTable = () => {
-    if (!songs) return (
-      <div className="w-full space-y-2">
-        <Skeleton className="w-full h-13" />
-        <Skeleton className="w-full h-13" />
-        <Skeleton className="w-full h-13" />
-        <Skeleton className="w-full h-13" />
-        <Skeleton className="w-full h-13" />
-        <Skeleton className="w-full h-13" />
-      </div>
-    )
     if (songs.length === 0) return (
       <div className="w-full h-full flex flex-col items-center justify-center">
         <DotLottieReact
@@ -46,14 +75,14 @@ function ArtistSong() {
     )
 
     return (
-      <section className="px-3 lg:px-6">
+      <section className="px-3 lg:px-6 w-full">
         <table className="w-full overflow-auto">
           <thead>
             <tr className="border-b border-border text-muted-foreground">
               <th className="pl-2 sm:pl-4 text-left w-10">#</th>
               <th className="px-3 sm:px-6 py-3 text-left">Title</th>
               <th className="px-3 sm:px-6 py-3 text-left">Album</th>
-              <th className="px-3 sm:px-6 py-3 text-left"></th>
+              <th className="px-3 sm:px-6 py-3 text-left">Streams</th>
               <th className="px-3 sm:px-6 py-3 text-left hidden lg:table-cell">Date added</th>
               <th className="p-3"></th>
             </tr>
@@ -62,7 +91,19 @@ function ArtistSong() {
             {songs.map((song, index) => (
               <tr key={song._id} className="font-medium group">
                 <td className="pl-2 sm:pl-4 w-10">
-                  {index + 1}
+                  <span className="group-hover:hidden">{index + 1}</span>
+                  <span className="hidden group-hover:inline-block">
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <button onClick={() => copyToClipboard(`listen?slug=${song.slug}`)}>
+                          <Copy className="size-4" />
+                        </button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Copy song url</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </span>
                 </td>
                 <td className="p-3 sm:px-6 flex gap-2">
                   <div className="size-19 lg:size-15 rounded-xs overflow-hidden flex items-center justify-center">
@@ -90,6 +131,9 @@ function ArtistSong() {
             ))}
           </tbody>
         </table>
+        <Pagination
+          objectPagination={objectPagination}
+        />
       </section>
     )
   }

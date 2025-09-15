@@ -1,0 +1,95 @@
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Skeleton } from "@/components/ui/skeleton";
+import SongTable from "@/components/User/SongTable";
+import { playPlaylist } from "@/features/playerControl/playerControlSlice";
+import { getAvatarFallback, resizeImage } from "@/helpers";
+import NotFound from "@/pages/Error/404NotFound";
+import { getAlbumById } from "@/services/Client/albumService";
+import { Dot, Play } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { Link, useParams } from "react-router-dom";
+
+function AlbumDetail() {
+  const { id } = useParams();
+  const [album, setAlbum] = useState(null);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    document.title = "Album";
+    const getAlbum = async () => {
+      const response = await getAlbumById(id);
+      console.log(response);
+      if (response.status === 200) {
+        setAlbum(response.data.album);
+        document.title = response.data.album.title + " - Album";
+      } else {
+        setAlbum("error")
+      }
+    }
+    getAlbum();
+  }, [id])
+
+  if (!album) return (
+    <div className="space-y-3">
+      <Skeleton className="w-full h-50" />
+      <Skeleton className="w-full h-20" />
+      <Skeleton className="w-full h-20" />
+      <Skeleton className="w-full h-20" />
+      <Skeleton className="w-full h-20" />
+    </div>
+  )
+
+  if (album === "error") return (
+    <NotFound />
+  )
+
+  return (
+    <>
+      <section className="flex gap-3 sm:gap-6 my-4 p-5 bg-linear-to-b from-[var(--green-bg)] to-background rounded-t-lg">
+        <div className="w-[130px] md:w-[200px] rounded-xs overflow-hidden flex items-center justify-center justify-center">
+          <img
+            src={resizeImage(album.thumbnail, 200)}
+            alt={album.title}
+            className="w-full aspect-square object-cover"
+          />
+        </div>
+        <div className="self-end flex flex-col gap-1 sm:gap-3 flex-1">
+          <p className="capitalize font-semibold text-xs sm:text-base">Album</p>
+          <h1 className="line-clamp-1 xl:leading-11.5">{album.title}</h1>
+          <p className="text-sm sm:text-base line-clamp-1">{album.description}</p>
+          <div className="flex items-center flex-wrap gap-1 sm:gap-2">
+            <Avatar>
+              <AvatarImage
+                src={resizeImage(album.idArtist.avatar || "", 40)}
+                alt={album.idArtist.fullName}
+              />
+              <AvatarFallback>{getAvatarFallback(album.idArtist.fullName)}</AvatarFallback>
+            </Avatar>
+            <Link className="font-medium hover:underline"
+              to={`/profile/${album.idArtist._id}`}
+            >
+              {album.idArtist.fullName}
+            </Link>
+            <Dot />
+            <p>{album.songs.length} songs</p>
+          </div>
+        </div>
+      </section>
+
+      <section className="px-5 flex items-center gap-5 mb-5">
+        <button className="p-3 sm:p-4 rounded-full bg-[var(--green-bg)]"
+          onClick={() => {
+            dispatch(playPlaylist (album.songs))
+          }}
+        >
+          <Play fill="var(--secondary)" color="var(--secondary)" />
+        </button>
+      </section>
+
+      <SongTable songs={album.songs} hideAlbum/>
+    </>
+  );
+}
+
+export default AlbumDetail;

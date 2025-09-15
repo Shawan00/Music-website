@@ -2,15 +2,20 @@ import { resizeImage } from "@/helpers";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ProgressBar from "./ProgressBar";
-import { Pause, Play, SkipBack, SkipForward, Heart, X, Volume2, Volume1, Volume, MonitorPlay, ListMusic, EllipsisVertical, Repeat2 } from "lucide-react";
+import { Pause, Play, SkipBack, SkipForward, X, Volume2, Volume1, Volume, MonitorPlay, Repeat2, ChevronUp } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { playNextSong, playPrevSong, removeSong } from "@/features/playerControl/playerControlSlice";
 import ElasticSlider from "@/components/ui/ElasticSlider";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Queue from "../Queue";
 import LikeSong from "./likeSong";
+import SongOptions from "../SongOptions";
+import ArtistUrl from "../ArtistUrl";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { useIsTablet } from "@/hooks/use-tablet";
 
 function PlayerControl() {
+  const tablet = useIsTablet()
   const song = useSelector(state => state.playerControl.song);
   const prevSongs = useSelector(state => state.playerControl.playedHistory);
   const dispatch = useDispatch();
@@ -30,18 +35,36 @@ function PlayerControl() {
   }
 
   useEffect(() => {
+    if (tablet) {
+      setVolume(100)
+    } else {
+      setVolume(30)
+    }
+  }, [tablet])
+
+  useEffect(() => {
     //Create media session
     if (!song) {
       return
     };
+
+    const getArtistsName = () => {
+      const firstArtist = song.artistId.fullName;
+      const otherArtists = song.collaborationArtistIds.map(artist => artist.fullName).join(", ");
+      return otherArtists.length > 0 ? `${firstArtist}, ${otherArtists}` : firstArtist;
+    }
+
+    if (location.pathname.includes('/listen')) {
+      navigate(`/listen?slug=${song.slug}`)
+    }
 
     setEnableRepeat(audioRef.current.audioLoopState());
 
     if ('mediaSession' in navigator) {
       navigator.mediaSession.metadata = new MediaMetadata({
         title: song.title,
-        artist: song.artist || "Unknow",
-        album: song.album || "Unknow",
+        artist: getArtistsName() || "Unknow",
+        album: song.albumId?.title || "Unknow",
         artwork: [
           {
             src: song.thumbnail,
@@ -50,18 +73,23 @@ function PlayerControl() {
       })
 
       const nextSong = () => {
+        audioRef.current.handleSendPlayedHistory()
         dispatch(playNextSong())
       }
 
       const prevSong = () => {
+        audioRef.current.handleSendPlayedHistory()
         dispatch(playPrevSong());
       }
 
       navigator.mediaSession.setActionHandler('nexttrack', nextSong);
-      navigator.mediaSession.setActionHandler('previoustrack', prevSong);
-
+      if (prevSongs.length > 0) {
+        navigator.mediaSession.setActionHandler('previoustrack', prevSong);
+      } else {
+        navigator.mediaSession.setActionHandler('previoustrack', null);
+      }
     }
-  }, [song, dispatch]);
+  }, [song, prevSongs, dispatch, navigate, location.pathname]);
 
   // Clear media session
   const clearMediaSession = () => {
@@ -88,7 +116,7 @@ function PlayerControl() {
     <>
       <div className="player-control" >
         <div className="glass-background flex items-center justify-between">
-          <div className="inner-rounded-thumbnail mr-3">
+          <div className="inner-rounded-thumbnail mr-3 hidden lg:block">
             <img
               src={resizeImage(song.thumbnail, 80)}
               alt={song.title}
@@ -96,21 +124,13 @@ function PlayerControl() {
               style={{ animationPlayState: isPlaying ? 'running' : 'paused' }}>
             </img>
           </div>
-          <div className="flex items-center gap-2 w-40">
-            <div className="inner-title">
+          <div className="hidden lg:flex items-center gap-2 w-35 xl:w-40">
+            <div className="inner-title truncate text-ellipsis">
               <span className="song-name">{song.title}</span>
-              <div className="song-artist">{song.artist ? (<>{
-                song.artist.map((item, index) => (
-                  <div key={index} className="artist-item">
-                    <Link>{item}</Link>
-                  </div>
-                ))
-              }</>) : (<>
-                Unknow
-              </>)}</div>
+              <ArtistUrl artistId={song.artistId} collaborationArtistIds={song.collaborationArtistIds} />
             </div>
             <div className="options">
-              <EllipsisVertical strokeWidth={1.5} />
+              <SongOptions song={song} />
             </div>
           </div>
           <div className="flex-1 flex flex-col items-center justify-around gap-1">
@@ -122,6 +142,7 @@ function PlayerControl() {
                   <button
                     className="active:text-[var(--logo-color)] active:[&>svg]:fill-[var(--logo-color)] disabled:opacity-50 disabled:cursor-not-allowed"
                     onClick={() => {
+                      audioRef.current.handleSendPlayedHistory()
                       dispatch(playPrevSong())
                     }}
                     disabled={prevSongs.length === 0}
@@ -129,6 +150,7 @@ function PlayerControl() {
                     <SkipBack
                       strokeWidth={1.5}
                       fill="var(--primary)"
+                      className="size-5 lg:size-6"
                     />
                   </button>
                 </TooltipTrigger>
@@ -146,11 +168,11 @@ function PlayerControl() {
                     {isPlaying ?
                       <Pause
                         fill="var(--primary)"
-                        className="transition-colors duration-300"
+                        className="transition-colors duration-300 size-5 lg:size-6"
                       /> :
                       <Play
                         fill="var(--primary)"
-                        className="transition-colors duration-300"
+                        className="transition-colors duration-300 size-5 lg:size-6"
                       />}
                   </button>
                 </TooltipTrigger>
@@ -163,11 +185,15 @@ function PlayerControl() {
                 <TooltipTrigger asChild>
                   <button
                     className="active:text-[var(--logo-color)] active:[&>svg]:fill-[var(--logo-color)]"
-                    onClick={() => dispatch(playNextSong())}
+                    onClick={() => {
+                      audioRef.current.handleSendPlayedHistory()
+                      dispatch(playNextSong())
+                    }}
                   >
                     <SkipForward
                       strokeWidth={1.5}
                       fill="var(--primary)"
+                      className="size-5 lg:size-6"
                     />
                   </button>
                 </TooltipTrigger>
@@ -182,6 +208,7 @@ function PlayerControl() {
                     <Repeat2
                       strokeWidth={1.5}
                       color={enableRepeat ? "var(--logo-color)" : "var(--primary)"}
+                      className="size-5 lg:size-6"
                     />
                   </button>
                 </TooltipTrigger>
@@ -192,13 +219,14 @@ function PlayerControl() {
             </div>
 
             <ProgressBar
+              id={song._id}
               src={song.audio}
               volume={volume}
               ref={audioRef}
               setPlayingState={setIsPlaying}
             />
           </div>
-          <div className="flex gap-5 items-center overflow-hidden">
+          <div className="hidden lg:flex gap-3 xl:gap-4 items-center overflow-hidden">
             <Tooltip>
               <TooltipTrigger>
                 <Link to={`/listen?slug=${song.slug}`}
@@ -217,16 +245,16 @@ function PlayerControl() {
             <Queue />
             <ElasticSlider
               leftIcon={<><VolumeIcon /></>}
-              rightIcon={<><Volume2 color="transparent" /></>}
+              rightIcon={<></>}
+              defaultValue={volume}
               setVolume={setVolume}
             />
-          </div>
-          <div>
             <Tooltip>
               <TooltipTrigger asChild>
                 <button onClick={() => {
+                  audioRef.current.handleSendPlayedHistory()
                   clearMediaSession()
-                  if (location.pathname.includes('/listen/')) {
+                  if (location.pathname.includes('/listen')) {
                     navigate("/")
                   }
                   dispatch(removeSong())
@@ -239,6 +267,91 @@ function PlayerControl() {
               </TooltipContent>
             </Tooltip>
           </div>
+
+          <Sheet>
+            <SheetTrigger className="block lg:hidden">
+              <ChevronUp className="ml-3 sm:ml-0 size-5 text-muted-foreground" />
+            </SheetTrigger>
+            <SheetContent side="bottom" aria-describedby={undefined}
+              className="p-5 space-y-4"
+            >
+              <div className="w-full flex flex-col items-center gap-2">
+                <div className="w-3/5 sm:w-1/3 rounded-full overflow-hidden">
+                  <img
+                    src={resizeImage(song.thumbnail, 250)}
+                    alt={song.title}
+                    className="w-full aspect-square object-cover"
+                  />
+                </div>
+                <span className="text-base font-medium -mb-2">{song.title}</span>
+                <ArtistUrl artistId={song.artistId} collaborationArtistIds={song.collaborationArtistIds} />
+              </div>
+              <div className="flex-1 flex flex-col items-center justify-around gap-1">
+                <div className="inner-button flex gap-4 items-center justify-center">
+                  <Link to={`/listen?slug=${song.slug}`}
+                    className={`flex-shrink-0 ${location.pathname.includes('/listen') ? 'text-[var(--logo-color)]' : ''}`}
+                  >
+                    <MonitorPlay
+                      strokeWidth={1.75}
+                    />
+                  </Link>
+                  <LikeSong song={song} />
+                  <button
+                    className="active:text-[var(--logo-color)] active:[&>svg]:fill-[var(--logo-color)] disabled:opacity-50 disabled:cursor-not-allowed"
+                    onClick={() => {
+                      audioRef.current.handleSendPlayedHistory()
+                      dispatch(playPrevSong())
+                    }}
+                    disabled={prevSongs.length === 0}
+                  >
+                    <SkipBack
+                      strokeWidth={1.5}
+                      fill="var(--primary)"
+                      className="size-5 lg:size-6"
+                    />
+                  </button>
+                  <button
+                    className="border-2 border-primary p-2 rounded-full hover:border-[var(--logo-color)] hover:text-[var(--logo-color)] hover:[&>svg]:fill-[var(--logo-color)] transition-colors duration-300"
+                    onClick={togglePlay}
+                  >
+                    {isPlaying ?
+                      <Pause
+                        fill="var(--primary)"
+                        className="transition-colors duration-300 size-5 lg:size-6"
+                      /> :
+                      <Play
+                        fill="var(--primary)"
+                        className="transition-colors duration-300 size-5 lg:size-6"
+                      />}
+                  </button>
+
+                  <button
+                    className="active:text-[var(--logo-color)] active:[&>svg]:fill-[var(--logo-color)]"
+                    onClick={() => {
+                      audioRef.current.handleSendPlayedHistory()
+                      dispatch(playNextSong())
+                    }}
+                  >
+                    <SkipForward
+                      strokeWidth={1.5}
+                      fill="var(--primary)"
+                      className="size-5 lg:size-6"
+                    />
+                  </button>
+
+                  <button onClick={() => toggleRepeat()} className="active:text-[var(--logo-color)]">
+                    <Repeat2
+                      strokeWidth={1.5}
+                      color={enableRepeat ? "var(--logo-color)" : "var(--primary)"}
+                      className="size-5 lg:size-6"
+                    />
+                  </button>
+
+                  <Queue />
+                </div>
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
 
       </div>

@@ -1,9 +1,8 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { getSong } from "../../../services/Admin/songService";
 import { useSearchParams } from "react-router-dom";
 import SongList from "./SongList";
 import CreateSong from "./CreateSong";
-import Pagination from "@/components/Admin/Pagination";
 
 function Song() {
 	const [songData, setSongData] = useState({});

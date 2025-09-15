@@ -17,6 +17,7 @@ function EditProfile({ profile, toVerify = false }) {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     fullName: profile.fullName,
+    avatar: profile.avatar,
     phone: profile.phone,
     gender: profile.gender,
     country: profile.country,

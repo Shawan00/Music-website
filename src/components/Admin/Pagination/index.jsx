@@ -128,7 +128,7 @@ function Pagination(props) {
               onClick={() => handlePageChange(currentPage - 1)}
             >
               <span className="flex items-center gap-2">
-                <ChevronLeft /> Prev
+                <ChevronLeft /> <span className='hidden sm:block'>Prev</span>
               </span>
             </li>
 
@@ -139,7 +139,7 @@ function Pagination(props) {
               onClick={() => handlePageChange(currentPage + 1)}
             >
               <span className="flex items-center gap-2">
-                Next <ChevronRight />
+                <span className='hidden sm:block'>Next</span> <ChevronRight />
               </span>
             </li>
           </ul>

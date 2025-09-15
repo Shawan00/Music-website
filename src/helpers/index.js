@@ -89,8 +89,9 @@ export const parseLRC = (lrcText) => {
 };
 
 export async function copyToClipboard(text) {
+  const domain = window.location.origin + "/";
   try {
-    await navigator.clipboard.writeText(text);
+    await navigator.clipboard.writeText(domain + text);
     showToast("Copied to clipboard", "success");
   } catch {
     showToast("Failed to copy to clipboard", "error");

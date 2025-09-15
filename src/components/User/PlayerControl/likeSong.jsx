@@ -16,6 +16,7 @@ function LikeSong({ song }) {
   const handleLike = async () => {
     setPending(true)
     const res = await likeSong(song.slug);
+    setPending(false)
     if (res.status === 200) {
       showToast(res.data.message, "success")
       if (res.data.message === "Song liked successfully") {
@@ -42,7 +43,6 @@ function LikeSong({ song }) {
     } else {
       showToast(res.data.message, "error")
     }
-    setPending(false)
   }
 
   return (
@@ -55,6 +55,7 @@ function LikeSong({ song }) {
             strokeWidth={1.5}
             fill={isLiked() ? "var(--logo-color)" : "var(--primary)"}
             color={isLiked() ? "var(--logo-color)" : "var(--primary)"}
+            className="size-5 lg:size-6"
           />
         </button>
       </TooltipTrigger>

@@ -6,6 +6,7 @@ import { selectSong } from '../../../features/playerControl/playerControlSlice';
 import Marker from '../Marker';
 import SongOptions from '../SongOptions';
 import { Skeleton } from '@/components/ui/skeleton';
+import ArtistUrl from '../ArtistUrl';
 
 function SugesstedSong() {
   const [sugesstedSongs, setSuggesstedSong] = useState(null);
@@ -16,26 +17,26 @@ function SugesstedSong() {
   useEffect(() => {
     const getData = async () => {
       const response = await getSuggestedSongs();
-      setSuggesstedSong(response.data.data);
+      setSuggesstedSong(response.data.data.slice(0, 6));
     }
     getData();
   }, [])
 
   return sugesstedSongs ? (
     <>
-      <div className='sugessted-song'>
+      <div className='sugessted-song mb-5'>
         {sugesstedSongs.map((item, index) => (
           <div
             className={`song-item ${item._id === currentSong?._id ? "active" : item._id === selectedSong?._id ? "bg-muted" : ""}`}
             key={index}
             onClick={() => dispatch(selectSong(item))}
           >
-            <div className='image'>
+            <div className='image w-15'>
               <img src={resizeImage(item.thumbnail, 60)} alt={item.title}></img>
             </div>
-            <div className='info'>
+            <div className='info flex-1 truncate'>
               <span className='title'>{item.title}</span>
-              <span className='artist'>artist</span>
+              <ArtistUrl artistId={item.artistId} collaborationArtistIds={item.collaborationArtistIds} />
             </div>
             {item._id === currentSong?._id && (
               <Marker />
@@ -56,12 +57,12 @@ function SugesstedSong() {
     </>
   ) : (
     <div className='sugessted-song'>
-      <Skeleton className="h-18"/>
-      <Skeleton className="h-18"/>
-      <Skeleton className="h-18"/>
-      <Skeleton className="h-18"/>
-      <Skeleton className="h-18"/>
-      <Skeleton className="h-18"/>
+      <Skeleton className="h-18" />
+      <Skeleton className="h-18" />
+      <Skeleton className="h-18" />
+      <Skeleton className="h-18" />
+      <Skeleton className="h-18" />
+      <Skeleton className="h-18" />
     </div>
   );
 }

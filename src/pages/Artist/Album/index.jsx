@@ -1,19 +1,28 @@
 import { Skeleton } from "@/components/ui/skeleton";
-import { getAllAlbums } from "@/services/Client/albumService";
-import { useEffect, useState } from "react";
+import { getMyAlbums } from "@/services/Client/albumService";
+import { useContext, useEffect, useState } from "react";
 import AlbumForm from "./albumForm";
 import { Card, CardContent } from "@/components/ui/card";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { resizeImage } from "@/helpers";
 import DeleteAlbum from "./delete";
+import { AuthContext } from "@/context/auth.context";
+import { useNavigate } from "react-router-dom";
+import VerifyArtist from "@/components/User/VerifyArtist";
 
 function ArtistAlbum() {
   const [albums, setAlbums] = useState(null);
+  const {user} = useContext(AuthContext)
+  const navigate = useNavigate()
+
+  if (!user) {
+    navigate("/login");
+  }
 
   useEffect(() => {
     document.title = "Album - Artist Studio";
     const fetchAlbums = async () => {
-      const res = await getAllAlbums();
+      const res = await getMyAlbums();
       if (res.status === 200) {
         setAlbums(res.data.albums.reverse());
       } else {
@@ -23,6 +32,10 @@ function ArtistAlbum() {
     fetchAlbums()
   }, [])
 
+  if (!user.userInfo.verifyArtist) {
+    return <VerifyArtist profile={user.userInfo} />;
+  }
+  
   if (!albums) return (
     <>
       <h2>Your albums</h2>
@@ -58,7 +71,7 @@ function ArtistAlbum() {
               <div className="flex flex-col justify-between flex-1">
                 <div>
                   <h3 className="line-clamp-2 mb-2">{album.title}</h3>
-                  <p className="text-muted-foreground">{album.songsCount || 0} {album.songsCount > 1 ? "songs" : "song"}</p>
+                  <p className="text-muted-foreground">{album.songCount || 0} {album.songCount > 1 ? "songs" : "song"}</p>
                 </div>
                 <div className="flex gap-3 justify-end">
                   <AlbumForm album={album} setAlbums={setAlbums} />

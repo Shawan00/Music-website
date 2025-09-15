@@ -14,7 +14,7 @@ const validatePasswordConditions = {
   specialChar: 'At least one special character',
 }
 
-function RegisterForm({setRegisterFalse}) {
+function RegisterForm({ setRegisterFalse }) {
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -38,6 +38,7 @@ function RegisterForm({setRegisterFalse}) {
   });
 
   const [tooltipOpen, setTooltipOpen] = useState(false);
+  const [pending, setPending] = useState(false);
 
   const validatePassword = (password) => {
     const checkLength = hasMinLength(password);
@@ -85,7 +86,7 @@ function RegisterForm({setRegisterFalse}) {
 
     if (value !== '') { // Check validation
       switch (name) {
-        case 'fullName':
+        case 'fullName': {
           const fullNameValid = value.length >= 1 ? 1 : 0;
           if (fullNameValid !== isValid.fullName) {
             setIsValid({
@@ -94,7 +95,8 @@ function RegisterForm({setRegisterFalse}) {
             })
           }
           break;
-        case 'email':
+        }
+        case 'email': {
           const emailValid = validateEmail(value) ? 1 : -1;
           if (emailValid !== isValid.email) {
             setIsValid({
@@ -103,7 +105,8 @@ function RegisterForm({setRegisterFalse}) {
             })
           }
           break;
-        case 'password':
+        }
+        case 'password': {
           const passwordValid = validatePassword(value) ? 1 : -1;
           if (passwordValid !== isValid.password) {
             setIsValid({
@@ -120,7 +123,8 @@ function RegisterForm({setRegisterFalse}) {
             })
           }
           break;
-        case 'confirmPassword':
+        }
+        case 'confirmPassword': {
           const confirmPasswordValid = value === formData.password ? 1 : -1;
           if (confirmPasswordValid !== isValid.confirmPassword) {
             setIsValid({
@@ -129,6 +133,7 @@ function RegisterForm({setRegisterFalse}) {
             })
           }
           break;
+        }
       }
     } else {
       setIsValid((prev) => ({
@@ -148,7 +153,9 @@ function RegisterForm({setRegisterFalse}) {
   }
 
   const handleSubmit = async () => {
+    setPending(true);
     const response = await clientRegister(formData)
+    setPending(false);
     if (response.status === 201) {
       showToast(response.data.message, 'success')
       setRegisterFalse()
@@ -229,9 +236,10 @@ function RegisterForm({setRegisterFalse}) {
               isValid.fullName !== 1 ||
               isValid.email !== 1 ||
               isValid.password !== 1 ||
-              isValid.confirmPassword !== 1
+              isValid.confirmPassword !== 1 ||
+              pending
             }
-          >Register</button>
+          >{pending ? 'Registering...' : 'Register'}</button>
         </form>
       </div>
     </>

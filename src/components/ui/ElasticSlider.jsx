@@ -21,7 +21,7 @@ export default function ElasticSlider({
   setVolume
 }) {
   return (
-    <div className={`flex-1 flex flex-col items-center justify-center gap-2 min-w-40 ${className}`}>
+    <div className={`flex-1 flex flex-col items-center justify-center gap-2 min-w-30 xl:min-w-40 ${className}`}>
       <Slider
         defaultValue={defaultValue}
         startingValue={startingValue}

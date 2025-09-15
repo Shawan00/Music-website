@@ -21,10 +21,12 @@ export const playerControlSlice = createSlice({
       state.nextSongs = [];
     },
     addSongToQueue: (state, action) => {
-      state.nextSongs.push(action.payload);
-      if (state.nextSongs.length > 30) {
-        state.nextSongs.shift();
+      if (!state.song) {
+        state.song = action.payload;
+        return;
       }
+      state.nextSongs.push(action.payload);
+      if (state.nextSongs.length > 30) state.nextSongs.shift();
     },
     playPlaylist: (state, action) => {
       const [firstSong, ...rest] = action.payload;
