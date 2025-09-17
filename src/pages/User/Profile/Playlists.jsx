@@ -1,4 +1,5 @@
 import { Skeleton } from "@/components/ui/skeleton";
+import PlaylistCard from "@/components/User/PlaylistCard";
 import { getAllPlaylist } from "@/services/Client/playlistService";
 import { useEffect, useState } from "react";
 
@@ -7,9 +8,8 @@ function Playlists() {
   useEffect(() => {
     const fetchPlaylists = async () => {
       const res = await getAllPlaylist();
-      console.log(res)
       if (res.status === 200) {
-        setPlaylists(res.data)
+        setPlaylists(res.data.playlists)
       } else setPlaylists([])
     }
     fetchPlaylists()
@@ -24,7 +24,11 @@ function Playlists() {
 
   return (
     <>
-      <div className="grid grid-cols-2 sm:grid-cols-4"></div>
+      <div className="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-5 gap-3 mb-5">
+        {playlists.map(playlist => (
+          <PlaylistCard key={playlist._id} playlist={playlist} />
+        ))}
+      </div>
     </>
   )
 }

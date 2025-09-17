@@ -10,6 +10,11 @@ export const getSuggestedArtists = async (params) => {
   return res
 }
 
+export const getFollowingArtist = async () => {
+  const res = await get(`/user/follow/artists`)
+  return res
+}
+
 export const updateProfile = async (profileData) => {
   const res = await patch(`user`, profileData)
   return res

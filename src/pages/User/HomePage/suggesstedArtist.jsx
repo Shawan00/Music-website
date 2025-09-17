@@ -6,7 +6,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import { Navigation } from 'swiper/modules';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { getAvatarFallback } from "@/helpers";
+import { getAvatarFallback, resizeImage } from "@/helpers";
 import { useNavigate } from "react-router-dom";
 
 function SuggesstedArtist() {
@@ -63,7 +63,7 @@ function SuggesstedArtist() {
             onClick={() => navigate(`/profile/${item._id}`)}
           >
             <Avatar className="w-full h-auto aspect-square mb-2">
-              <AvatarImage src={item.avatar}/>
+              <AvatarImage src={resizeImage(item.avatar, 210)}/>
               <AvatarFallback>{getAvatarFallback(item.fullName)}</AvatarFallback>
             </Avatar>
             <p className="font-semibold truncate text-center">{item.fullName}</p>

@@ -6,6 +6,8 @@ import { useContext } from "react"
 import { useNavigate } from "react-router-dom";
 import EditProfile from "./edit";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import Playlists from "./Playlists";
+import Following from "./Following";
 
 function Profile() {
   const { user } = useContext(AuthContext);
@@ -28,9 +30,9 @@ function Profile() {
           <p className="font-medium">Profile</p>
           <h1>{user.userInfo.fullName}</h1>
           <div className="flex items-center gap-1 font-medium">
-            <span>6 followers</span>
+            <span>{user.userInfo.followCount} {user.userInfo.followCount > 1 ? "followers" : "follower"}</span>
             <Dot />
-            <span>10 following</span>
+            <span>{user.userInfo.artistsFollowed.length} following</span>
           </div>
         </div>
       </section>
@@ -49,17 +51,16 @@ function Profile() {
             <p className="text-muted-foreground mb-3">{user.userInfo.bio || "No biography"}</p>
             <h5>Country</h5>
             <p className="text-muted-foreground mb-3">{user.userInfo.country || "No country specified"}</p>
-            <EditProfile profile={user.userInfo}/>
+            <EditProfile profile={user.userInfo} />
           </CardContent>
         </Card>
 
-        <Card className="lg:col-span-2 h-fit bg-muted rounded-sm">
-          <CardContent>
-            <h2 className="text-xl font-bold mb-2">Your Playlists</h2>
-
-            <h2 className="text-xl font-bold mb-2">Following</h2>
-          </CardContent>
-        </Card>
+        <section className="lg:col-span-2 h-fit px-6">
+          <h2 className="text-xl font-bold mb-2">Your Playlists</h2>
+          <Playlists />
+          <h2 className="text-xl font-bold mb-2">Following</h2>
+          <Following />
+        </section>
       </section>
     </>
   )
