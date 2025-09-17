@@ -1,11 +1,15 @@
 import { clientRefreshToken } from '@/services/Auth/authService';
 import axios from 'axios';
 
-const preAIP = "http://localhost:3000/";
+const preAIP = "https://projectmusic.onrender.com/";
 
 const api = axios.create();
 api.defaults.baseURL = preAIP
 api.defaults.withCredentials = true
+
+export const refreshInstance = axios.create();
+refreshInstance.defaults.baseURL = preAIP
+refreshInstance.defaults.withCredentials = true
 
 //thêm interceptors cho request
 api.interceptors.request.use(function (config) {
@@ -23,13 +27,16 @@ api.interceptors.response.use(function (response) {
   // Do nothing with response data
   return response;
 }, async function (error) {
-  
-  if (!error.config._retry) {
-    
+  if (
+    error.response &&
+    error.response.status === 401 &&
+    !error.config._retry
+  ) {
     const originalRequest = error.config;
-    error.config._retry = true;
+    originalRequest._retry = true;
     try {
       const res = await clientRefreshToken();
+      console.log(res)
       const { accessToken } = res.data;
       localStorage.setItem('accessToken', accessToken);
 
@@ -39,10 +46,10 @@ api.interceptors.response.use(function (response) {
 
       return api(originalRequest);
     } catch (error) {
-      console.error('Refresh token failed:', error);
+      // console.error('Refresh token failed:', error);
       localStorage.removeItem('accessToken');
       localStorage.removeItem('user');
-      window.location.href = "/login";
+      // window.location.href = "/login";
       return Promise.reject(error);
     }
   }
@@ -64,11 +71,11 @@ async function request(endpoint, method, data = null) {
       }
       config.data = data;
     }
-
+    
     const response = await api(config);
     return response;
   } catch (error) {
-    console.log("API Erorr: ", error);
+    // console.log("API Erorr: ", error);
     return {
       status: error.response?.status || 500,
       data: error.response?.data || { message: "An error occurred" }

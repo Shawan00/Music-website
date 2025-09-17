@@ -1,28 +1,28 @@
 import { Skeleton } from "@/components/ui/skeleton";
-import PlaylistCard from "@/components/User/PlaylistCard";
-import { getSuggestedPlaylist } from "@/services/Client/playlistService";
+import { getSuggestedAlbum } from "@/services/Client/albumService";
 import { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import { Navigation } from 'swiper/modules';
+import AlbumCard from "@/components/User/AlbumCard";
 
-function SuggestedPlaylist() {
-  const [playlists, setPlaylists] = useState(null);
-  
+function SuggestedAlbum() {
+  const [albums, setAlbums] = useState(null);
+
   useEffect(() => {
-    const getPlaylists = async () => {
-      const response = await getSuggestedPlaylist();
-      if (response.status === 200) {
-        setPlaylists(response.data.playlistRecommendations);
+    const fetchAlbums = async () => {
+      const res = await getSuggestedAlbum()
+      if (res.status === 200) {
+        setAlbums(res.data.albumRecommendations)
       } else {
-        setPlaylists([]);
+        setAlbums([])
       }
     }
-    getPlaylists();
+    fetchAlbums()
   }, [])
 
-  if (!playlists) return (
+  if (!albums) return (
     <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-4 mb-5">
       <Skeleton className="w-full aspect-9/10" />
       <Skeleton className="w-full aspect-9/10" />
@@ -33,11 +33,11 @@ function SuggestedPlaylist() {
     </div>
   )
 
-  if (playlists.length === 0) return null
+  if (albums.length === 0) return null
 
   return (
     <>
-      <h2>Playlists shared with you</h2>
+      <h2>Albums shared with you</h2>
       <section className="grid grid-cols-1">
         <Swiper
           loop={true}
@@ -58,9 +58,9 @@ function SuggestedPlaylist() {
             }
           }}
         >
-          {playlists.map((playlist) => (
-            <SwiperSlide key={playlist._id}>
-              <PlaylistCard playlist={playlist} />
+          {albums.map((album) => (
+            <SwiperSlide key={album._id}>
+              <AlbumCard album={album} />
             </SwiperSlide>
           ))}
         </Swiper>
@@ -69,4 +69,4 @@ function SuggestedPlaylist() {
   )
 }
 
-export default SuggestedPlaylist;
+export default SuggestedAlbum;

@@ -6,7 +6,7 @@ import { Heart } from "lucide-react";
 import { useContext, useState } from "react";
 
 function LikeSong({ song }) {
-  const {user, setUser} = useContext(AuthContext);
+  const { user, setUser } = useContext(AuthContext);
   const [pending, setPending] = useState(false);
 
   const isLiked = () => {
@@ -14,6 +14,10 @@ function LikeSong({ song }) {
   }
 
   const handleLike = async () => {
+    if (!user) {
+      showToast("You are not logged in", "error")
+      return
+    }
     setPending(true)
     const res = await likeSong(song.slug);
     setPending(false)
@@ -41,7 +45,11 @@ function LikeSong({ song }) {
         localStorage.setItem("userInfo", JSON.stringify(newUser.userInfo))
       }
     } else {
-      showToast(res.data.message, "error")
+      if (res.status === 401) {
+        showToast("You are not logged in", "error")
+      } else {
+        showToast(res.data.message, "error")
+      }
     }
   }
 

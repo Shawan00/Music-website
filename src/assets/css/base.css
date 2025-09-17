@@ -74,4 +74,8 @@
     opacity: 1;
     color: transparent;
   }
+
+  .swiper-button-prev, .swiper-button-next {
+    @apply !text-gray-50 scale-50 sm:scale-60 lg:scale-70
+  }
 }

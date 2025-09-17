@@ -10,8 +10,8 @@ export const getAllFollowedPlaylist = async () => {
   return response;
 }
 
-export const getSuggestedPlaylist = async () => {
-  const response = await get("/playlist")
+export const getSuggestedPlaylist = async (params) => {
+  const response = await get("/recommendation/playlist", params)
   return response;
 }
 

@@ -1,8 +1,8 @@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { playFromHistory } from "@/features/playerControl/playerControlSlice"
 import { resizeImage } from "@/helpers"
-import { Ellipsis } from "lucide-react"
 import { useDispatch } from "react-redux"
+import ArtistUrl from "../ArtistUrl"
 
 function History({ playedHistory }) {
   const dispatch = useDispatch()
@@ -33,10 +33,7 @@ function History({ playedHistory }) {
                     </div>
                     <div className='info'>
                       <span className='title'>{item.title}</span>
-                      <span className='artist'>artist</span>
-                    </div>
-                    <div>
-                      <Ellipsis strokeWidth={1.5} size={20} />
+                      <ArtistUrl artistId={item.artistId} collaborationArtistIds={item.collaborationArtistIds} />
                     </div>
                   </div>
                 ))}

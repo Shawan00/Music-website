@@ -35,9 +35,9 @@ function Profile() {
         </div>
       </section>
 
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-2 sm:gap-4">
+      <section className="grid grid-cols-1 lg:grid-cols-3 gap-2 sm:gap-4 mb-5">
         <Card className="col-span-1 h-fit bg-muted rounded-sm">
-          <CardHeader className="font-semibold">Infomation</CardHeader>
+          <CardHeader className="font-bold text-lg">Infomation</CardHeader>
           <CardContent>
             <h5>Email</h5>
             <p className="text-muted-foreground mb-3">{user.userInfo.email}</p>
@@ -53,10 +53,10 @@ function Profile() {
           </CardContent>
         </Card>
 
-        <Card className="col-span-2 h-fit bg-muted rounded-sm">
+        <Card className="lg:col-span-2 h-fit bg-muted rounded-sm">
           <CardContent>
-            <h2 className="text-xl font-bold mb-2">Top tracks this month</h2>
-            <h2 className="text-xl font-bold mb-2">Playlists</h2>
+            <h2 className="text-xl font-bold mb-2">Your Playlists</h2>
+
             <h2 className="text-xl font-bold mb-2">Following</h2>
           </CardContent>
         </Card>

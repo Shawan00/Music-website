@@ -2,7 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import SongTable from "@/components/User/SongTable";
 import { playPlaylist } from "@/features/playerControl/playerControlSlice";
-import { getAvatarFallback, resizeImage } from "@/helpers";
+import { formatDateToString, getAvatarFallback, resizeImage } from "@/helpers";
 import NotFound from "@/pages/Error/404NotFound";
 import { getAlbumById } from "@/services/Client/albumService";
 import { Dot, Play } from "lucide-react";
@@ -57,7 +57,6 @@ function AlbumDetail() {
         <div className="self-end flex flex-col gap-1 sm:gap-3 flex-1">
           <p className="capitalize font-semibold text-xs sm:text-base">Album</p>
           <h1 className="line-clamp-1 xl:leading-11.5">{album.title}</h1>
-          <p className="text-sm sm:text-base line-clamp-1">{album.description}</p>
           <div className="flex items-center flex-wrap gap-1 sm:gap-2">
             <Avatar>
               <AvatarImage
@@ -80,14 +79,23 @@ function AlbumDetail() {
       <section className="px-5 flex items-center gap-5 mb-5">
         <button className="p-3 sm:p-4 rounded-full bg-[var(--green-bg)]"
           onClick={() => {
-            dispatch(playPlaylist (album.songs))
+            dispatch(playPlaylist(album.songs))
           }}
         >
           <Play fill="var(--secondary)" color="var(--secondary)" />
         </button>
       </section>
 
-      <SongTable songs={album.songs} hideAlbum/>
+      <section className="mb-5">
+        <SongTable songs={album.songs} hideAlbum />
+      </section>
+
+      <section className="mb-5 px-5">
+        <h2 className="text-lg sm:text-xl xl:text-3xl font-bold">About this album</h2>
+        <p className="text-sm sm:text-base mb-2">{album.description}</p>
+        <h4 className="font-semibold">Release</h4>
+        <p>{formatDateToString(album.createdAt)}</p>
+      </section>
     </>
   );
 }

@@ -28,6 +28,9 @@ export const playerControlSlice = createSlice({
       state.nextSongs.push(action.payload);
       if (state.nextSongs.length > 30) state.nextSongs.shift();
     },
+    setNextSongs: (state, action) => {
+      state.nextSongs = action.payload;
+    },
     playPlaylist: (state, action) => {
       const [firstSong, ...rest] = action.payload;
       if (state.song) {
@@ -70,6 +73,7 @@ export const {
   selectSong,
   removeSong,
   addSongToQueue,
+  setNextSongs,
   playPlaylist,
   playNextSong,
   playPrevSong,

@@ -5,8 +5,9 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem,
 import SearchInput from "@/components/ui/search-input"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 import { AuthContext } from "@/context/auth.context";
-import { getAvatarFallback } from "@/helpers";
+import { getAvatarFallback, showToast } from "@/helpers";
 import { useIsMobile } from "@/hooks/use-mobile"
+import { clientLogout } from "@/services/Auth/authService";
 import { Bell, FileMusic, LifeBuoy, LogOut, Search, User } from "lucide-react";
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -17,10 +18,16 @@ function Header() {
   const isMobile = useIsMobile();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
-  const handleLogout = () => {
-    localStorage.removeItem("userInfo");
-    localStorage.removeItem("accessToken");
-    setUser(null);
+  const handleLogout = async () => {
+    const res = await clientLogout();
+    if (res.status === 200) {
+      showToast("You have been logged out", "success");
+      localStorage.removeItem("userInfo");
+      localStorage.removeItem("accessToken");
+      setUser(null);
+    } else {
+      showToast("Failed to logout", "error");
+    }
   }
 
   return (

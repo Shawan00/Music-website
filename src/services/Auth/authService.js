@@ -1,4 +1,4 @@
-import { post } from "@/utils/request"
+import { post, refreshInstance } from "@/utils/request"
 
 const saveToLocalSorage = (res) => {
   if (!res.err) {
@@ -24,12 +24,17 @@ export const clientLogin = async (data) => {
   return response
 }
 
+export const clientLogout = async () => {
+  const response = await post('user/auth/logout')
+  return response
+}
+
 export const clientRegister = async (data) => {
   const response = await post('user/auth/register', data)
   return response
 }
 
 export const clientRefreshToken = async () => {
-  const response = await post('user/auth/refreshToken')
+  const response = await refreshInstance.post('user/auth/refreshToken')
   return response
 }

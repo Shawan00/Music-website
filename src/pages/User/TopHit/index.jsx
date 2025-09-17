@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import ArtistUrl from "@/components/User/ArtistUrl";
 import { Skeleton } from "@/components/ui/skeleton";
 import SongOptions from "@/components/User/SongOptions";
+import { Link } from "react-router-dom";
 
 function TopHit() {
   const [songs, setSongs] = useState(null);
@@ -33,7 +34,7 @@ function TopHit() {
           setSongs({
             top3: response.data.data.slice(0, 3),
             next7: response.data.data.slice(3, 10),
-            rest: response.data.data.slice(10),
+            rest: response.data.data.slice(10, 20),
           });
         }
       } else {
@@ -115,11 +116,18 @@ function TopHit() {
             <p className={`mb-0 text-sm sm:text-base font-semibold w-full truncate ${playingSong && playingSong._id === song._id ? "text-[var(--logo-color)]" : "hover:text-[var(--logo-color)] transition-color duration-300"}`}>
               {song.title}
             </p>
-            <ArtistUrl artistId={song.artist} collaborationArtistIds={song.collaborationArtists} />
+            <ArtistUrl artistId={song.artistId} collaborationArtistIds={song.collaborationArtistIds} />
           </div>
         </div>
-        <div className="flex-1 flex items-center justify-end overflow-hidden">
-          <div className="hidden sm:block flex-1 truncate">Album AlbumAlbumAlbumAlbumAlbumAlbum</div>
+        <div className="flex-1 flex items-center justify-end overflow-hidden"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {song.albumId && (
+            <Link to={`/album/${song.albumId._id}`}
+              className="hidden sm:block flex-1 truncate text-muted-foreground hover:text-primary hover:underline">
+              {song.albumId.title}
+            </Link>
+          )}
           <SongOptions song={song} />
         </div>
       </div>
@@ -136,7 +144,7 @@ function TopHit() {
       <div className="mb-5 w-fit px-4 py-2 flex items-center gap-2 bg-[var(--blue-bg)] rounded-full cursor-pointer"
         onClick={() => dispatch(playPlaylist([...songs.top3, ...songs.next7]))}
       >
-        <Play className="size-4" fill="var(--primary)"/>
+        <Play className="size-4" fill="var(--primary)" />
         <span>Play all</span>
       </div>
 
@@ -153,7 +161,7 @@ function TopHit() {
             {playingSong && playingSong._id === songs.top3[1]._id ? (
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 cursor-pointer"
               >
-                <Marker className="scale-110 sm:scale-150 lg:scale-175 xl:scale-220"/>
+                <Marker className="scale-110 sm:scale-150 lg:scale-175 xl:scale-220" />
               </div>
             ) : (
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 cursor-pointer
@@ -170,7 +178,7 @@ function TopHit() {
           />
           <div className="w-10/15 ml-auto overflow-hidden">
             <h2 className="mb-0 text-xs sm:text-base lg:text-xl xl:text-2xl">{songs.top3[1].title}</h2>
-            <ArtistUrl artistId={songs.top3[1].artist} collaborationArtistIds={songs.top3[1].collaborationArtistIds} />
+            <ArtistUrl artistId={songs.top3[1].artistId} collaborationArtistIds={songs.top3[1].collaborationArtistIds} />
           </div>
         </div>
         <div className="relative space-y-2 h-fit cursor-pointer"
@@ -185,7 +193,7 @@ function TopHit() {
             {playingSong && playingSong._id === songs.top3[0]._id ? (
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 cursor-pointer"
               >
-                <Marker className="scale-110 sm:scale-150 lg:scale-175 xl:scale-220"/>
+                <Marker className="scale-110 sm:scale-150 lg:scale-175 xl:scale-220" />
               </div>
             ) : (
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 cursor-pointer
@@ -202,7 +210,7 @@ function TopHit() {
           />
           <div className="w-10/13 ml-auto overflow-hidden">
             <h2 className="mb-0 text-xs sm:text-base lg:text-xl xl:text-2xl">{songs.top3[0].title}</h2>
-            <ArtistUrl artistId={songs.top3[0].artist} collaborationArtistIds={songs.top3[0].collaborationArtists} />
+            <ArtistUrl artistId={songs.top3[0].artistId} collaborationArtistIds={songs.top3[0].collaborationArtistIds} />
           </div>
         </div>
         <div className="relative space-y-2 h-fit mt-10 sm:mt-15 cursor-pointer"
@@ -217,7 +225,7 @@ function TopHit() {
             {playingSong && playingSong._id === songs.top3[2]._id ? (
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 cursor-pointer"
               >
-                <Marker className="scale-110 sm:scale-150 lg:scale-175 xl:scale-220"/>
+                <Marker className="scale-110 sm:scale-150 lg:scale-175 xl:scale-220" />
               </div>
             ) : (
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 cursor-pointer
@@ -234,7 +242,7 @@ function TopHit() {
           />
           <div className="w-10/15 ml-auto overflow-hidden">
             <h2 className="mb-0 text-xs sm:text-base lg:text-xl xl:text-2xl">{songs.top3[2].title}</h2>
-            <ArtistUrl artistId={songs.top3[2].artist} collaborationArtistIds={songs.top3[2].collaborationArtists} />
+            <ArtistUrl artistId={songs.top3[2].artistId} collaborationArtistIds={songs.top3[2].collaborationArtistIds} />
           </div>
         </div>
       </section>

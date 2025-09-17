@@ -37,6 +37,7 @@ function ArtistSong() {
         sortKey: "createdAt",
         sortValue: "desc"
       });
+      console.log(res)
       if (res.status === 200) {
         setSongs(res.data.songs);
         setObjectPagination(res.data.pagination);
@@ -119,7 +120,7 @@ function ArtistSong() {
                   </div>
                 </td>
                 <td className="p-3 sm:px-6">{song.album?.title || "No album"}</td>
-                <td className="p-3 sm:px-6">{formatNumberWithDots(song.streams || 100000)}</td>
+                <td className="p-3 sm:px-6">{formatNumberWithDots(song.playCount || 0)}</td>
                 <td className="p-3 sm:px-6 hidden lg:table-cell">{formatDateToString(song.createdAt)}</td>
                 <td className="py-3 ">
                   <div className="flex gap-2 justify-end">

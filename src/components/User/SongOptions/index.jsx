@@ -24,8 +24,14 @@ function SongOptions({ song, currentPlaylistId, setCurrentPlaylist, setLikedSong
   }
 
   const handleLike = async () => {
+    if (!user) {
+      showToast("You are not logged in", "error")
+      return
+    }
     setPending(true)
     const res = await likeSong(song.slug);
+    setPending(false)
+
     if (res.status === 200) {
       showToast(res.data.message, "success")
       if (res.data.message === "Song liked successfully") {
@@ -37,7 +43,6 @@ function SongOptions({ song, currentPlaylistId, setCurrentPlaylist, setLikedSong
           }
         }
         localStorage.setItem("userInfo", JSON.stringify(newUser.userInfo))
-        setPending(false)
         setUser(newUser)
         setLikedSongs(prev => [...prev, song])
       } else {
@@ -49,12 +54,15 @@ function SongOptions({ song, currentPlaylistId, setCurrentPlaylist, setLikedSong
           }
         }
         localStorage.setItem("userInfo", JSON.stringify(newUser.userInfo))
-        setPending(false)
         setUser(newUser)
         setLikedSongs(prev => prev.filter(prevSong => prevSong._id !== song._id))
       }
     } else {
-      showToast(res.data.message, "error")
+      if (res.status === 401) {
+        showToast("You are not logged in", "error")
+      } else {
+        showToast(res.data.message, "error")
+      }
     }
   }
 

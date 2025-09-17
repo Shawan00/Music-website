@@ -11,6 +11,7 @@ import Songs from "./songs";
 import { defaultBackgroundSong, defaultBackgroundSongLight } from "@/helpers/defaultImage";
 import { useTheme } from "@/components/theme/theme-provider";
 import PlaylistCard from "@/components/User/PlaylistCard";
+import FollowArtist from "./follow";
 
 function ProfileUser() {
   const { id } = useParams();
@@ -68,9 +69,9 @@ function ProfileUser() {
           ) : (
             <p>User profile</p>
           )}
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-2">
             <h1>{userProfile.user.fullName}</h1>
-
+            {userProfile.user.verifyArtist && <FollowArtist artistId={userProfile.user._id} />}
           </div>
         </div>
       </section>
@@ -90,12 +91,12 @@ function ProfileUser() {
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-6 lg:gap-15">
               <div className="grid grid-cols-2 sm:grid-cols-1 gap-3 sm:gap-6 py-3 sm:py-6">
                 <div className="flex flex-col">
-                  <span className="font-bold text-lg">{formatNumberWithDots("1098146")}</span>
+                  <span className="font-bold text-lg">{formatNumberWithDots("1098")}</span>
                   <span className="font-medium text-muted-foreground">Streams</span>
                 </div>
                 <div className="flex flex-col">
-                  <span className="font-bold text-lg">{formatNumberWithDots("27146")}</span>
-                  <span className="font-medium text-muted-foreground">Listeners</span>
+                  <span className="font-bold text-lg">{formatNumberWithDots(userProfile.user.followCount)}</span>
+                  <span className="font-medium text-muted-foreground">Followers</span>
                 </div>
                 <div className="flex flex-col">
                   <span className="font-bold text-lg">{userProfile.user.country}</span>

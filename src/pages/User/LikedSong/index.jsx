@@ -1,14 +1,17 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import SongTable from "@/components/User/SongTable";
+import { AuthContext } from "@/context/auth.context";
 import { playPlaylist } from "@/features/playerControl/playerControlSlice";
 import { getAllLikedSong } from "@/services/Client/songService";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { Play } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
 
 function LikedSong() {
   const dispatch = useDispatch()
+  const { user } = useContext(AuthContext);
   const [songs, setSongs] = useState(null);
 
   useEffect(() => {
@@ -23,6 +26,15 @@ function LikedSong() {
     }
     fetchLikedSongs();
   }, [])
+
+  if (!user) return (
+    <div className="flex flex-col items-center justify-center h-full">
+      <p>You need to log in to view your liked songs.</p>
+      <Link to="/login" className="bg-[var(--main-green)] font-medium p-3 rounded-sm mt-3">
+        Go to Login
+      </Link>
+    </div>
+  )
 
   if (!songs) return (
     <div className="space-y-3">

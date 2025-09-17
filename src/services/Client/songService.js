@@ -1,8 +1,13 @@
 import { defaultImage } from "@/helpers/defaultImage";
 import { get, patch, post } from "../../utils/request";
 
-export async function getSuggestedSongs() {
-  const response = await get("song/getAll");
+export async function getSuggestedSongs(params) {
+  const response = await get("recommendation", params);
+  return response;
+}
+
+export async function getNextSongs(data) {
+  const response = await post("recommendation/by-songs", data);
   return response;
 }
 

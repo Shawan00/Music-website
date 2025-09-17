@@ -5,6 +5,11 @@ export const getMyAlbums = async () => {
   return res
 }
 
+export const getSuggestedAlbum = async (params) => {
+  const res = get("/recommendation/album", params)
+  return res
+}
+
 export const getAlbumById = async (id) => {
   const res = get(`/album/${id}`)
   return res

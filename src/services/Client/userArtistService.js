@@ -5,6 +5,11 @@ export const getAllArtists = async () => {
   return res
 }
 
+export const getSuggestedArtists = async (params) => {
+  const res = await get(`recommendation/artist`, params)
+  return res
+}
+
 export const updateProfile = async (profileData) => {
   const res = await patch(`user`, profileData)
   return res
@@ -19,5 +24,10 @@ export const verifyArtist = async () => {
 
 export const getUserProfileById = async (userId) => {
   const res = await get(`user/${userId}`)
+  return res
+}
+
+export const followArtist = async (artistId) => {
+  const res = await patch(`user/follow/${artistId}`)
   return res
 }

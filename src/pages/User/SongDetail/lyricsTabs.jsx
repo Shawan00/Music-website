@@ -63,38 +63,39 @@ function LyricsTabs({ lyricsUrl }) {
   const lineRefs = useRef([])
   const disableAutoScroll = useRef(false)
   const isProgrammaticScroll = useRef(false)
-
-  const scrollToActiveLine = () => {
-    if (disableAutoScroll.current || currentLine === -1 || !lyricsContainerRef.current || !lineRefs.current[currentLine])
-      return;
-    
-    const container = lyricsContainerRef.current;
-    const activeLine = lineRefs.current[currentLine];
-    const containerHeight = container.clientHeight;
-    const lineHeight = activeLine.clientHeight;
-
-    // Tính toán vị trí scroll
-    const lineTop = activeLine.offsetTop;
-    const scrollPosition = lineTop - lineHeight / 2 - containerHeight / 2 - 27;
-
-    // Giới hạn scroll position để không vượt quá phạm vi
-    const maxScroll = container.scrollHeight - containerHeight;
-    const finalScrollPosition = Math.max(0, Math.min(scrollPosition, maxScroll));
-
-    isProgrammaticScroll.current = true
-
-    container.scrollTo({
-      top: finalScrollPosition,
-      behavior: 'smooth'
-    })
-
-    const handleScrollEnd = () => {
-      isProgrammaticScroll.current = false;
-      container.removeEventListener('scrollend', handleScrollEnd);
-    }
-    container.addEventListener('scrollend', handleScrollEnd);
-  };
+  
   useEffect(() => {
+    const scrollToActiveLine = () => {
+      if (disableAutoScroll.current || currentLine === -1 || !lyricsContainerRef.current || !lineRefs.current[currentLine])
+        return;
+
+      const container = lyricsContainerRef.current;
+      const activeLine = lineRefs.current[currentLine];
+      const containerHeight = container.clientHeight;
+      const lineHeight = activeLine.clientHeight;
+
+      // Tính toán vị trí scroll
+      const lineTop = activeLine.offsetTop;
+      const scrollPosition = lineTop - lineHeight / 2 - containerHeight / 2 - 27;
+
+      // Giới hạn scroll position để không vượt quá phạm vi
+      const maxScroll = container.scrollHeight - containerHeight;
+      const finalScrollPosition = Math.max(0, Math.min(scrollPosition, maxScroll));
+
+      isProgrammaticScroll.current = true
+
+      container.scrollTo({
+        top: finalScrollPosition,
+        behavior: 'smooth'
+      })
+
+      const handleScrollEnd = () => {
+        isProgrammaticScroll.current = false;
+        container.removeEventListener('scrollend', handleScrollEnd);
+      }
+      container.addEventListener('scrollend', handleScrollEnd);
+    };
+
     scrollToActiveLine()
   }, [currentLine])
 
@@ -110,7 +111,7 @@ function LyricsTabs({ lyricsUrl }) {
     return () => {
       enableAutoScroll.cancel()
     }
-  },[])
+  }, [])
 
   if (error) {
     return (

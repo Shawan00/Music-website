@@ -1,10 +1,11 @@
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { resizeImage } from "@/helpers"
-import { Ellipsis, ListMusic } from "lucide-react"
+import { ListMusic } from "lucide-react"
 import { useSelector } from "react-redux"
 import NextSongs from "./nextSongs"
 import History from "./history"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
+import ArtistUrl from "../ArtistUrl"
 
 function Queue() {
   const playerControl = useSelector(state => state.playerControl)
@@ -40,10 +41,7 @@ function Queue() {
               </div>
               <div className='info'>
                 <span className='title text-green-500'>{playerControl.song.title}</span>
-                <span className='artist'>artist</span>
-              </div>
-              <div>
-                <Ellipsis strokeWidth={1.5} size={20} />
+                <ArtistUrl artistId={playerControl.song.artistId} collaborationArtistIds={playerControl.song.collaborationArtistIds} />
               </div>
             </div>
 

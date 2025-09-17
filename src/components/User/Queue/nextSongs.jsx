@@ -1,8 +1,8 @@
 import { Skeleton } from "@/components/ui/skeleton"
 import { playFromNextSongs } from "@/features/playerControl/playerControlSlice"
 import { resizeImage } from "@/helpers"
-import { Ellipsis } from "lucide-react"
 import { useDispatch } from "react-redux"
+import ArtistUrl from "../ArtistUrl"
 
 function NextSongs({ nextSongs }) {
   const dispatch = useDispatch()
@@ -49,14 +49,11 @@ function NextSongs({ nextSongs }) {
           onClick={() => dispatch(playFromNextSongs(index))}
         >
           <div className='image'>
-            <img src={resizeImage(item.thumbnail, 60)} alt="thumbnail"></img>
+            <img src={resizeImage(item.thumbnail || "", 60)} alt="thumbnail"></img>
           </div>
           <div className='info'>
             <span className='title'>{item.title}</span>
-            <span className='artist'>artist</span>
-          </div>
-          <div>
-            <Ellipsis strokeWidth={1.5} size={20} />
+            <ArtistUrl artistId={item.artistId} collaborationArtistIds={item.collaborationArtistIds} />
           </div>
         </div>
       ))}

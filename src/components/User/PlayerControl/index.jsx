@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import ProgressBar from "./ProgressBar";
 import { Pause, Play, SkipBack, SkipForward, X, Volume2, Volume1, Volume, MonitorPlay, Repeat2, ChevronUp } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { playNextSong, playPrevSong, removeSong } from "@/features/playerControl/playerControlSlice";
+import { playNextSong, playPrevSong, removeSong, setNextSongs } from "@/features/playerControl/playerControlSlice";
 import ElasticSlider from "@/components/ui/ElasticSlider";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Queue from "../Queue";
@@ -13,11 +13,11 @@ import SongOptions from "../SongOptions";
 import ArtistUrl from "../ArtistUrl";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useIsTablet } from "@/hooks/use-tablet";
+import { getNextSongs } from "@/services/Client/songService";
 
 function PlayerControl() {
   const tablet = useIsTablet()
-  const song = useSelector(state => state.playerControl.song);
-  const prevSongs = useSelector(state => state.playerControl.playedHistory);
+  const playerControl = useSelector(state => state.playerControl);
   const dispatch = useDispatch();
   const audioRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(true);
@@ -43,31 +43,51 @@ function PlayerControl() {
   }, [tablet])
 
   useEffect(() => {
+    if (playerControl.nextSongs.length === 0 && playerControl.song) {
+      const fetchNextSongs = async () => {
+        const response = await getNextSongs({
+          songIds: [playerControl.song._id, ...playerControl.playedHistory.map(song => song._id)],
+          limit: 10
+        })
+        console.log(response)
+        if (response.status === 200) {
+          dispatch(setNextSongs(response.data.recommendations))
+        } else {
+          setTimeout(() => {
+            fetchNextSongs()
+          }, 60000)
+        }
+      }
+      fetchNextSongs()
+    }
+  }, [dispatch, playerControl])
+
+  useEffect(() => {
     //Create media session
-    if (!song) {
+    if (!playerControl.song) {
       return
     };
 
     const getArtistsName = () => {
-      const firstArtist = song.artistId.fullName;
-      const otherArtists = song.collaborationArtistIds.map(artist => artist.fullName).join(", ");
+      const firstArtist = playerControl.song.artistId.fullName;
+      const otherArtists = playerControl.song.collaborationArtistIds.map(artist => artist.fullName).join(", ");
       return otherArtists.length > 0 ? `${firstArtist}, ${otherArtists}` : firstArtist;
     }
 
     if (location.pathname.includes('/listen')) {
-      navigate(`/listen?slug=${song.slug}`)
+      navigate(`/listen?slug=${playerControl.song.slug}`)
     }
 
     setEnableRepeat(audioRef.current.audioLoopState());
 
     if ('mediaSession' in navigator) {
       navigator.mediaSession.metadata = new MediaMetadata({
-        title: song.title,
+        title: playerControl.song.title,
         artist: getArtistsName() || "Unknow",
-        album: song.albumId?.title || "Unknow",
+        album: playerControl.song.albumId?.title || "Unknow",
         artwork: [
           {
-            src: song.thumbnail,
+            src: playerControl.song.thumbnail,
           }
         ]
       })
@@ -83,13 +103,13 @@ function PlayerControl() {
       }
 
       navigator.mediaSession.setActionHandler('nexttrack', nextSong);
-      if (prevSongs.length > 0) {
+      if (playerControl.playedHistory.length > 0) {
         navigator.mediaSession.setActionHandler('previoustrack', prevSong);
       } else {
         navigator.mediaSession.setActionHandler('previoustrack', null);
       }
     }
-  }, [song, prevSongs, dispatch, navigate, location.pathname]);
+  }, [playerControl, dispatch, navigate, location.pathname]);
 
   // Clear media session
   const clearMediaSession = () => {
@@ -104,7 +124,7 @@ function PlayerControl() {
     }
   }
 
-  if (!song) return null;
+  if (!playerControl.song) return null;
 
   const VolumeIcon = () => {
     if (volume === 100) return <Volume2 />
@@ -118,24 +138,24 @@ function PlayerControl() {
         <div className="glass-background flex items-center justify-between">
           <div className="inner-rounded-thumbnail mr-3 hidden lg:block">
             <img
-              src={resizeImage(song.thumbnail, 80)}
-              alt={song.title}
+              src={resizeImage(playerControl.song.thumbnail, 80)}
+              alt={playerControl.song.title}
               className="rounded-thumbnail animation-spin"
               style={{ animationPlayState: isPlaying ? 'running' : 'paused' }}>
             </img>
           </div>
           <div className="hidden lg:flex items-center gap-2 w-35 xl:w-40">
             <div className="inner-title truncate text-ellipsis">
-              <span className="song-name">{song.title}</span>
-              <ArtistUrl artistId={song.artistId} collaborationArtistIds={song.collaborationArtistIds} />
+              <span className="song-name">{playerControl.song.title}</span>
+              <ArtistUrl artistId={playerControl.song.artistId} collaborationArtistIds={playerControl.song.collaborationArtistIds} />
             </div>
             <div className="options">
-              <SongOptions song={song} />
+              <SongOptions song={playerControl.song} />
             </div>
           </div>
           <div className="flex-1 flex flex-col items-center justify-around gap-1">
             <div className="inner-button flex gap-4 items-center justify-center">
-              <LikeSong song={song} />
+              <LikeSong song={playerControl.song} />
 
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -145,7 +165,7 @@ function PlayerControl() {
                       audioRef.current.handleSendPlayedHistory()
                       dispatch(playPrevSong())
                     }}
-                    disabled={prevSongs.length === 0}
+                    disabled={playerControl.playedHistory.length === 0}
                   >
                     <SkipBack
                       strokeWidth={1.5}
@@ -219,17 +239,19 @@ function PlayerControl() {
             </div>
 
             <ProgressBar
-              id={song._id}
-              src={song.audio}
+              id={playerControl.song._id}
+              src={playerControl.song.audio}
               volume={volume}
               ref={audioRef}
               setPlayingState={setIsPlaying}
             />
           </div>
+
+          {/* For tablet & mobile */}
           <div className="hidden lg:flex gap-3 xl:gap-4 items-center overflow-hidden">
             <Tooltip>
               <TooltipTrigger>
-                <Link to={`/listen?slug=${song.slug}`}
+                <Link to={`/listen?slug=${playerControl.song.slug}`}
                   className={`flex-shrink-0 ${location.pathname.includes('/listen') ? 'text-[var(--logo-color)]' : ''}`}
                 >
                   <MonitorPlay
@@ -278,31 +300,31 @@ function PlayerControl() {
               <div className="w-full flex flex-col items-center gap-2">
                 <div className="w-3/5 sm:w-1/3 rounded-full overflow-hidden">
                   <img
-                    src={resizeImage(song.thumbnail, 250)}
-                    alt={song.title}
+                    src={resizeImage(playerControl.song.thumbnail, 250)}
+                    alt={playerControl.song.title}
                     className="w-full aspect-square object-cover"
                   />
                 </div>
-                <span className="text-base font-medium -mb-2">{song.title}</span>
-                <ArtistUrl artistId={song.artistId} collaborationArtistIds={song.collaborationArtistIds} />
+                <span className="text-base font-medium -mb-2">{playerControl.song.title}</span>
+                <ArtistUrl artistId={playerControl.song.artistId} collaborationArtistIds={playerControl.song.collaborationArtistIds} />
               </div>
               <div className="flex-1 flex flex-col items-center justify-around gap-1">
                 <div className="inner-button flex gap-4 items-center justify-center">
-                  <Link to={`/listen?slug=${song.slug}`}
+                  <Link to={`/listen?slug=${playerControl.song.slug}`}
                     className={`flex-shrink-0 ${location.pathname.includes('/listen') ? 'text-[var(--logo-color)]' : ''}`}
                   >
                     <MonitorPlay
                       strokeWidth={1.75}
                     />
                   </Link>
-                  <LikeSong song={song} />
+                  <LikeSong song={playerControl.song} />
                   <button
                     className="active:text-[var(--logo-color)] active:[&>svg]:fill-[var(--logo-color)] disabled:opacity-50 disabled:cursor-not-allowed"
                     onClick={() => {
                       audioRef.current.handleSendPlayedHistory()
                       dispatch(playPrevSong())
                     }}
-                    disabled={prevSongs.length === 0}
+                    disabled={playerControl.playedHistory.length === 0}
                   >
                     <SkipBack
                       strokeWidth={1.5}
