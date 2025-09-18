@@ -84,7 +84,7 @@ function TopHit() {
 
   const songRow = (song, index) => {
     return (
-      <div
+      <div key={song._id}
         className="flex items-center gap-4 sm:gap-6 xl:gap-10 px-0 sm:px-4 py-3 cursor-pointer
               hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md border-b border-border"
         onClick={() => dispatch(selectSong(song))}

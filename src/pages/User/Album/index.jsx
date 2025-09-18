@@ -19,7 +19,6 @@ function AlbumDetail() {
     document.title = "Album";
     const getAlbum = async () => {
       const response = await getAlbumById(id);
-      console.log(response);
       if (response.status === 200) {
         setAlbum(response.data.album);
         document.title = response.data.album.title + " - Album";

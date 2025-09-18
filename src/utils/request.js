@@ -1,18 +1,17 @@
 import { clientRefreshToken } from '@/services/Auth/authService';
 import axios from 'axios';
 
-// const preAIP = "http://localhost:3000/";
-const preAIP = "https://projectmusic.onrender.com/";
+// const preAPI = "http://localhost:3000/";
+const preAPI = import.meta.env.VITE_API_URL;
 
 const api = axios.create();
-api.defaults.baseURL = preAIP
+api.defaults.baseURL = preAPI
 api.defaults.withCredentials = true
 
 export const refreshInstance = axios.create();
-refreshInstance.defaults.baseURL = preAIP
+refreshInstance.defaults.baseURL = preAPI
 refreshInstance.defaults.withCredentials = true
 
-//thêm interceptors cho request
 api.interceptors.request.use(function (config) {
   const accessToken = localStorage.getItem('accessToken');
   if (accessToken && config.headers){
@@ -27,6 +26,7 @@ api.interceptors.request.use(function (config) {
 api.interceptors.response.use(function (response) {
   return response;
 }, async function (error) {
+  console.log(error.response, error.response.status === 401, !error.config.retry)
   if (
     error.response &&
     error.response.status === 401 &&
@@ -35,8 +35,8 @@ api.interceptors.response.use(function (response) {
     const originalRequest = error.config;
     originalRequest._retry = true;
     try {
+      console.log(originalRequest)
       const res = await clientRefreshToken();
-      console.log(res)
       const { accessToken } = res.data;
       localStorage.setItem('accessToken', accessToken);
 
@@ -46,6 +46,7 @@ api.interceptors.response.use(function (response) {
 
       return api(originalRequest);
     } catch (error) {
+      console.log('err')
       localStorage.removeItem('user');
       localStorage.removeItem('accessToken');
       // window.location.href = "/login";

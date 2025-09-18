@@ -49,7 +49,6 @@ function PlayerControl() {
           songIds: [playerControl.song._id, ...playerControl.playedHistory.map(song => song._id)],
           limit: 10
         })
-        console.log(response)
         if (response.status === 200) {
           dispatch(setNextSongs(response.data.recommendations))
         } else {

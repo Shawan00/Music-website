@@ -39,7 +39,7 @@ function EditProfile({ profile, toVerify = false }) {
     if (files && files.length > 0) {
       const res = await uploadFile(files[0]);
       if (res.status === 200) {
-        setFormData({ ...formData, avatar: res.data.url });
+        setFormData({ ...formData, avatar: res.data.secure_url });
       } else {
         showToast("Failed to upload image", "error");
       }

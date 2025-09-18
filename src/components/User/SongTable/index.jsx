@@ -29,7 +29,7 @@ function SongTable({ songs, currentPlaylistId, setCurrentPlaylist, setLikedSongs
             <th className={`px-3 sm:px-6 py-3 text-left ${hideAlbum ? "hidden" : "hidden sm:table-cell"}`}>Album</th>
             <th className="px-3 sm:px-6 py-3 text-left hidden sm:table-cell">Streams</th>
             <th className="px-3 sm:px-6 py-3 text-left hidden sm:table-cell">Likes</th>
-            <th className="px-3 sm:px-6 py-3 text-left hidden lg:table-cell">Date added</th>
+            <th className="px-3 sm:px-6 py-3 text-left hidden lg:table-cell">Release date</th>
             <th className="p-3"></th>
           </tr>
         </thead>

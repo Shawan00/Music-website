@@ -4,7 +4,7 @@ import { formatNumberWithDots, getAvatarFallback, resizeImage } from "@/helpers"
 import NotFound from "@/pages/Error/404NotFound";
 import { getUserProfileById } from "@/services/Client/userArtistService";
 import { BadgeCheck } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Albums from "./albums";
 import Songs from "./songs";
@@ -12,9 +12,11 @@ import { defaultBackgroundSong, defaultBackgroundSongLight } from "@/helpers/def
 import { useTheme } from "@/components/theme/theme-provider";
 import PlaylistCard from "@/components/User/PlaylistCard";
 import FollowArtist from "./follow";
+import { AuthContext } from "@/context/auth.context";
 
 function ProfileUser() {
   const { id } = useParams();
+  const { user } = useContext(AuthContext);
   const [userProfile, setUserProfile] = useState(null);
   const { theme } = useTheme()
 
@@ -48,6 +50,12 @@ function ProfileUser() {
     <NotFound />
   )
 
+  const isMyAccount = () => {
+    if (!user) return false;
+    if (user.userInfo._id === userProfile.user._id) return true;
+    return false;
+  }
+
   const defaultBg = theme === "dark" ? defaultBackgroundSong : defaultBackgroundSongLight
   const backgroundStyle = {
     backgroundImage: `url(${userProfile?.user.avatar || defaultBg})`
@@ -71,7 +79,7 @@ function ProfileUser() {
           )}
           <div className="flex items-center gap-2">
             <h1>{userProfile.user.fullName}</h1>
-            {userProfile.user.verifyArtist && <FollowArtist artistId={userProfile.user._id} />}
+            {userProfile.user.verifyArtist && !isMyAccount() && <FollowArtist artistId={userProfile.user._id} />}
           </div>
         </div>
       </section>
