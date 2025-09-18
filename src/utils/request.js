@@ -4,15 +4,10 @@ import axios from 'axios';
 // const preAPI = "http://localhost:3000/";
 const preAPI = import.meta.env.VITE_API_URL;
 
-const api = axios.create();
-api.defaults.baseURL = preAPI
-api.defaults.withCredentials = true
+axios.defaults.baseURL = preAPI
+axios.defaults.withCredentials = true
 
-export const refreshInstance = axios.create();
-refreshInstance.defaults.baseURL = preAPI
-refreshInstance.defaults.withCredentials = true
-
-api.interceptors.request.use(function (config) {
+axios.interceptors.request.use(function (config) {
   const accessToken = localStorage.getItem('accessToken');
   if (accessToken && config.headers){
     config.headers.Authorization = `Bearer ${accessToken}`;
@@ -23,7 +18,7 @@ api.interceptors.request.use(function (config) {
 });
 
 // thêm interceptors cho response
-api.interceptors.response.use(function (response) {
+axios.interceptors.response.use(function (response) {
   return response;
 }, async function (error) {
   console.log(error.response, error.response.status === 401, !error.config.retry)
@@ -32,10 +27,9 @@ api.interceptors.response.use(function (response) {
     error.response.status === 401 &&
     !error.config._retry
   ) {
-    const originalRequest = error.config;
+    let originalRequest = error.config;
     originalRequest._retry = true;
     try {
-      console.log(originalRequest)
       const res = await clientRefreshToken();
       const { accessToken } = res.data;
       localStorage.setItem('accessToken', accessToken);
@@ -44,9 +38,8 @@ api.interceptors.response.use(function (response) {
         originalRequest.headers.Authorization = `Bearer ${accessToken}`;
       }
 
-      return api(originalRequest);
+      return axios(originalRequest);
     } catch (error) {
-      console.log('err')
       localStorage.removeItem('user');
       localStorage.removeItem('accessToken');
       // window.location.href = "/login";
@@ -72,7 +65,7 @@ async function request(endpoint, method, data = null) {
       config.data = data;
     }
     
-    const response = await api(config);
+    const response = await axios(config);
     return response;
   } catch (error) {
     // console.log("API Erorr: ", error);
