@@ -69,7 +69,6 @@ function SongOptions({ song, currentPlaylistId, setCurrentPlaylist, setLikedSong
   const handleRemoveFromPlaylist = async () => {
     setPending(true)
     const res = await removeSongFromPlaylist(currentPlaylistId, song._id)
-    console.log(res);
     if (res.status === 200) {
       showToast(res.data.message, "success")
       setCurrentPlaylist(prev => ({

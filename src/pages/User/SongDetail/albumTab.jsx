@@ -1,4 +1,5 @@
 import { Skeleton } from "@/components/ui/skeleton";
+import ArtistUrl from "@/components/User/ArtistUrl";
 import Marker from "@/components/User/Marker";
 import SongOptions from "@/components/User/SongOptions";
 import { playPlaylist, selectSong } from "@/features/playerControl/playerControlSlice";
@@ -79,7 +80,7 @@ function AlbumTabs({ id }) {
               <Play fill="var(--secondary)" color="var(--secondary)" />
             </button>
           </div>
-          <div className="w-full space-y-2">
+          <div className="w-full space-y-1">
             {album.songs.map((item) => (
               <div
                 className={`song-item ${item._id === songId ? "active" : item._id === selectedSong?._id ? "bg-muted" : ""}`}
@@ -91,6 +92,7 @@ function AlbumTabs({ id }) {
                 </div>
                 <div className='info flex-1 truncate'>
                   <span className='title'>{item.title}</span>
+                  <ArtistUrl artistId={item.artistId} collaborationArtistIds={item.collaborationArtistIds}/>
                 </div>
                 {item._id === songId && (
                   <Marker />

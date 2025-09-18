@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { getSuggestedSongs } from '../../../services/Client/songService';
 import { Skeleton } from '@/components/ui/skeleton';
 import SongItem from '@/pages/User/HomePage/songItem';
+import { removeDuplicatesById } from '@/helpers';
 
 function SugesstedSong() {
   const [sugesstedSongs, setSuggesstedSong] = useState(null);
@@ -12,7 +13,7 @@ function SugesstedSong() {
         type: "hybrid",
         limit: 6
       });
-      setSuggesstedSong(response.data.recommendations);
+      setSuggesstedSong(removeDuplicatesById(response.data.recommendations));
     }
     getData();
   }, [])

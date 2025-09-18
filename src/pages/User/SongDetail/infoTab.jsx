@@ -49,7 +49,7 @@ function InfoTab({ song }) {
                     className="flex flex-col items-center w-full gap-1 group"
                   >
                     <Avatar className="w-full h-auto aspect-square">
-                      <AvatarImage src={resizeImage(song.artistId.avatar || "")} className="w-full h-auto" />
+                      <AvatarImage src={resizeImage(song.artistId.avatar || "", 150)} className="w-full h-auto" />
                       <AvatarFallback className="text-4xl">{getAvatarFallback(song.artistId.fullName)}</AvatarFallback>
                     </Avatar>
                     <p className="font-semibold group-hover:underline truncate">
@@ -61,7 +61,7 @@ function InfoTab({ song }) {
                       className="flex flex-col items-center w-full gap-1 group"
                     >
                       <Avatar className="w-full h-auto aspect-square">
-                        <AvatarImage src={resizeImage(artist.avatar || "")} className="w-full h-auto" />
+                        <AvatarImage src={resizeImage(artist.avatar || "", 150)} className="w-full h-auto" />
                         <AvatarFallback className="text-4xl">{getAvatarFallback(artist.fullName)}</AvatarFallback>
                       </Avatar>
                       <p className="font-semibold group-hover:underline truncate">

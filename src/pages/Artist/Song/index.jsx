@@ -11,6 +11,7 @@ import Pagination from "@/components/Admin/Pagination";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Copy } from "lucide-react";
 import VerifyArtist from "@/components/User/VerifyArtist";
+import ArtistUrl from "@/components/User/ArtistUrl";
 
 function ArtistSong() {
   const [songs, setSongs] = useState(null);
@@ -20,10 +21,6 @@ function ArtistSong() {
   const page = parseInt(searchParams.get("page")) || 1;
   const pageSize = parseInt(searchParams.get("pageSize")) || 8;
   const navigate = useNavigate()
-
-  if (!user) {
-    navigate("/login");
-  }
 
   useEffect(() => {
     document.title = "Songs - Artist Studio";
@@ -37,7 +34,6 @@ function ArtistSong() {
         sortKey: "createdAt",
         sortValue: "desc"
       });
-      console.log(res)
       if (res.status === 200) {
         setSongs(res.data.songs);
         setObjectPagination(res.data.pagination);
@@ -47,6 +43,11 @@ function ArtistSong() {
     }
     fetchSongs();
   }, [page, pageSize])
+
+  if (!user) {
+    navigate("/login");
+    return;
+  }
 
   if (!user.userInfo.verifyArtist) {
     return <VerifyArtist profile={user.userInfo} />;
@@ -92,7 +93,7 @@ function ArtistSong() {
             {songs.map((song, index) => (
               <tr key={song._id} className="font-medium group">
                 <td className="pl-2 sm:pl-4 w-10">
-                  <span className="group-hover:hidden">{index + 1}</span>
+                  <span className="group-hover:hidden">{index + 1 + (page - 1) * pageSize}</span>
                   <span className="hidden group-hover:inline-block">
                     <Tooltip>
                       <TooltipTrigger asChild>
@@ -109,17 +110,17 @@ function ArtistSong() {
                 <td className="p-3 sm:px-6 flex gap-2">
                   <div className="size-19 lg:size-15 rounded-xs overflow-hidden flex items-center justify-center">
                     <img
-                      src={resizeImage(song.thumbnail, 60)}
+                      src={resizeImage(song.thumbnail, 130)}
                       alt={song.title}
                       className="w-full aspect-square object-cover"
                     />
                   </div>
                   <div className="flex flex-col justify-center gap-2">
                     <span className="font-medium group-hover:text-[var(--green-highlight)] line-clamp-1">{song.title}</span>
-                    <span className="text-sm text-muted-foreground">{song.artist || "artist"}</span>
+                    <ArtistUrl artistId={song.artistId} collaborationArtistIds={song.collaborationArtistIds}/>
                   </div>
                 </td>
-                <td className="p-3 sm:px-6">{song.album?.title || "No album"}</td>
+                <td className="p-3 sm:px-6">{song.albumId?.title || "No album"}</td>
                 <td className="p-3 sm:px-6">{formatNumberWithDots(song.playCount || 0)}</td>
                 <td className="p-3 sm:px-6 hidden lg:table-cell">{formatDateToString(song.createdAt)}</td>
                 <td className="py-3 ">

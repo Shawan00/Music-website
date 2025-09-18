@@ -63,7 +63,7 @@ function SuggesstedArtist() {
             onClick={() => navigate(`/profile/${item._id}`)}
           >
             <Avatar className="w-full h-auto aspect-square mb-2">
-              <AvatarImage src={resizeImage(item.avatar, 210)}/>
+              <AvatarImage src={resizeImage(item.avatar || "", 210)}/>
               <AvatarFallback>{getAvatarFallback(item.fullName)}</AvatarFallback>
             </Avatar>
             <p className="font-semibold truncate text-center">{item.fullName}</p>

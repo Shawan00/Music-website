@@ -9,7 +9,7 @@ import { getPlaylistBySlug } from "@/services/Client/playlistService";
 import { Play } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 function TopPlaylist() {
   const { slug } = useParams();
@@ -118,7 +118,12 @@ function TopPlaylist() {
                 </div>
               </div>
               <div className="flex-1 flex items-center justify-end overflow-hidden">
-                <div className="hidden sm:block flex-1 truncate">Album</div>
+                {song.albumId && (
+                  <Link to={`/album/${song.albumId._id}`}
+                    className="hidden sm:block flex-1 truncate text-muted-foreground hover:text-primary hover:underline">
+                    {song.albumId.title}
+                  </Link>
+                )}
                 <SongOptions song={song} />
               </div>
             </div>

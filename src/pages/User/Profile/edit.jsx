@@ -49,7 +49,11 @@ function EditProfile({ profile, toVerify = false }) {
   const handleSubmit = async () => {
     const res = await updateProfile(formData)
     if (res.status !== 200) {
-      showToast("Failed to update profile", "error");
+      if (res.status === 401) {
+        showToast("Please login to update profile", "error");
+      } else {
+        showToast("Failed to update profile", "error");
+      }
     } else {
       showToast(toVerify ? "Your account is verified" : "Profile updated successfully", "success");
       localStorage.setItem("userInfo", JSON.stringify(res.data.user))

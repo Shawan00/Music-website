@@ -58,7 +58,9 @@ function Banner() {
         >
           {user && user.userInfo.country && (
             <SwiperSlide>
-              <div className="p-1.5 sm:p-3 cursor-pointer bg-muted rounded-md flex items-center gap-3 bg-gradient bg-gradient-1">
+              <Link className="p-1.5 sm:p-3 cursor-pointer bg-muted rounded-md flex items-center gap-3 bg-gradient bg-gradient-1"
+                to="/top-hit"
+              >
                 <div className='size-22 sm:size-30 xl:size-33 rounded-full overflow-hidden border border-border flex flex-col items-center justify-center'>
                   <strong className="text-base sm:text-lg xl:text-xl text-red-800 dark:text-red-300">TOP HITS</strong>
                   <p className="text-xs sm:text-sm xl:text-base text-muted-foreground">Music Chart</p>
@@ -67,7 +69,7 @@ function Banner() {
                   <h4 className='line-clamp-2'>Top music of <strong className='bg-linear-to-r from-[var(--green-highlight)] to-[var(--logo-color)] text-transparent bg-clip-text'>{user.userInfo.country}</strong></h4>
                   <p className='text-sm sm:text-base text-muted-foreground line-clamp-2'>Music Chart this week</p>
                 </div>
-              </div>
+              </Link>
             </SwiperSlide>
           )}
 
@@ -84,12 +86,14 @@ function Banner() {
               </div>
               <div className='space-y-2'>
                 <h4 className='line-clamp-2'>Today&apos;s <strong className='bg-linear-to-r from-[#f12711] to-[#f5af19] text-transparent bg-clip-text'>US-UK</strong> Hits</h4>
-                <p className='text-sm sm:text-base text-muted-foreground line-clamp-2'>Music Chart this week</p>
+                <p className='text-sm sm:text-base text-muted-foreground line-clamp-2'>Talor Swift, Ed Sheeran, Selena Gomez, etc.</p>
               </div>
             </Link>
           </SwiperSlide>
           <SwiperSlide>
-            <div className="p-1.5 sm:p-3 cursor-pointer bg-muted rounded-md flex items-center gap-3 bg-gradient bg-gradient-3">
+            <Link className="p-1.5 sm:p-3 cursor-pointer bg-muted rounded-md flex items-center gap-3 bg-gradient bg-gradient-3"
+              to="/top-playlist/k-pop-perfect-all-kill"
+            >
               <div className='size-22 sm:size-30 xl:size-33 rounded-sm overflow-hidden border border-border flex flex-col items-center justify-center'>
                 <img
                   src="/k-pop.webp"
@@ -99,12 +103,14 @@ function Banner() {
               </div>
               <div className='space-y-2'>
                 <h4 className='line-clamp-2'><strong className='bg-linear-to-r from-[#4e54c8] to-[#8f94fb] text-transparent bg-clip-text'>K-POP</strong> Perfect All-Kill</h4>
-                <p className='text-sm sm:text-base text-muted-foreground line-clamp-2'>Music Chart this week</p>
+                <p className='text-sm sm:text-base text-muted-foreground line-clamp-2'>BTS, BLACKPINK</p>
               </div>
-            </div>
+            </Link>
           </SwiperSlide>
           <SwiperSlide>
-            <div className="p-1.5 sm:p-3 cursor-pointer bg-muted rounded-md flex items-center gap-3 bg-gradient bg-gradient-4">
+            <Link className="p-1.5 sm:p-3 cursor-pointer bg-muted rounded-md flex items-center gap-3 bg-gradient bg-gradient-4"
+              to="/top-playlist/today-s-v-pop-hits"
+            >
               <div className='size-22 sm:size-30 xl:size-33 rounded-sm overflow-hidden border border-border flex flex-col items-center justify-center'>
                 <img
                   src="/v-pop.webp"
@@ -114,12 +120,14 @@ function Banner() {
               </div>
               <div className='space-y-2'>
                 <h4 className='line-clamp-2'>Today&apos;s <strong className='bg-linear-to-r from-[#DCE35B] to-[#45B649] text-transparent bg-clip-text'>V-POP</strong> Hits</h4>
-                <p className='text-sm sm:text-base text-muted-foreground line-clamp-2'>Music Chart this week</p>
+                <p className='text-sm sm:text-base text-muted-foreground line-clamp-2'>Sơn Tùng M-TP, SOOBIN, tlinh</p>
               </div>
-            </div>
+            </Link>
           </SwiperSlide>
           <SwiperSlide>
-            <div className="p-1.5 sm:p-3 cursor-pointer bg-muted rounded-md flex items-center gap-3 bg-gradient bg-gradient-5">
+            <Link className="p-1.5 sm:p-3 cursor-pointer bg-muted rounded-md flex items-center gap-3 bg-gradient bg-gradient-5"
+              to="/top-playlist/new-release-from-us-uk"
+            >
               <div className='size-22 sm:size-30 xl:size-33 rounded-sm overflow-hidden border border-border flex flex-col items-center justify-center'>
                 <img
                   src="/us-uk-2.webp"
@@ -129,12 +137,14 @@ function Banner() {
               </div>
               <div className='space-y-2'>
                 <h4 className='line-clamp-2'>New release from <strong className='bg-linear-to-r from-[#c471ed] to-[#f64f59] text-transparent bg-clip-text'>US-UK</strong></h4>
-                <p className='text-sm sm:text-base text-muted-foreground line-clamp-2'>Music Chart this week</p>
+                <p className='text-sm sm:text-base text-muted-foreground line-clamp-2'>Taylor Swift, Ed Sheeran, Selena Gomez, etc.</p>
               </div>
-            </div>
+            </Link>
           </SwiperSlide>
           <SwiperSlide>
-            <div className="p-1.5 sm:p-3 cursor-pointer bg-muted rounded-md flex items-center gap-3 bg-gradient bg-gradient-3">
+            <Link className="p-1.5 sm:p-3 cursor-pointer bg-muted rounded-md flex items-center gap-3 bg-gradient bg-gradient-3"
+              to="/top-playlist/k-pop-daebak"
+            >
               <div className='size-22 sm:size-30 xl:size-33 rounded-sm overflow-hidden border border-border flex flex-col items-center justify-center'>
                 <img
                   src="/k-pop-2.webp"
@@ -144,9 +154,9 @@ function Banner() {
               </div>
               <div className='space-y-2'>
                 <h4 className='line-clamp-2'><strong className='bg-linear-to-r from-[#4e54c8] to-[#8f94fb] text-transparent bg-clip-text'>K-POP</strong> DeaBak</h4>
-                <p className='text-sm sm:text-base text-muted-foreground line-clamp-2'>Music Chart this week</p>
+                <p className='text-sm sm:text-base text-muted-foreground line-clamp-2'>BTS, BLACKPINK</p>
               </div>
-            </div>
+            </Link>
           </SwiperSlide>
         </Swiper>
       </section>

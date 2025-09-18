@@ -32,7 +32,7 @@ function Profile() {
           <div className="flex items-center gap-1 font-medium">
             <span>{user.userInfo.followCount} {user.userInfo.followCount > 1 ? "followers" : "follower"}</span>
             <Dot />
-            <span>{user.userInfo.artistsFollowed.length} following</span>
+            <span>{user.userInfo.artistsFollowed?.length || 0} following</span>
           </div>
         </div>
       </section>

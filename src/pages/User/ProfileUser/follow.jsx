@@ -9,7 +9,7 @@ function FollowArtist({ artistId }) {
   const [pending, setPending] = useState(false);
 
   const isFollowed = () => {
-    return user?.userInfo.artistsFollowed.includes(artistId);
+    return user?.userInfo?.artistsFollowed?.includes(artistId);
   }
 
   const handleFollowArtist = async () => {

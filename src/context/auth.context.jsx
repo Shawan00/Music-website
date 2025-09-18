@@ -4,8 +4,8 @@ export const AuthContext = createContext()
 
 export const AuthProvider = ({ children }) => {
   // lấy dữ liệu từ local storage
-  const accessToken = localStorage.getItem('accessToken') + ""
-  const userInfo = localStorage.getItem('userInfo')
+  const accessToken = localStorage.getItem('accessToken') || null
+  const userInfo = localStorage.getItem('userInfo') || null
 
   const initialUser = accessToken && userInfo ? {
     accessToken,

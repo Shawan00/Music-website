@@ -33,6 +33,7 @@ export const formatTimeMinute = (time) => {
 }
 
 export const resizeImage = (img, width) => {
+  if (!img) return ""
   return img.replace('upload/', `upload/c_limit,w_${width}/f_auto/`);
 }
 
@@ -96,4 +97,15 @@ export async function copyToClipboard(text) {
   } catch {
     showToast("Failed to copy to clipboard", "error");
   }
+}
+
+export function removeDuplicatesById(arr) {
+  const seen = new Set();
+  return arr.filter(item => {
+    if (seen.has(item._id)) {
+      return false;
+    }
+    seen.add(item._id);
+    return true;
+  });
 }

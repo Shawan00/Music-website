@@ -30,8 +30,8 @@ function SongForm({ song = null, setSongs }) {
     thumbnail: song?.thumbnail || undefined,
     background: song?.background || undefined,
     genreId: song?.genreId || undefined,
-    albumId: song?.albumId || undefined,
-    collaborationArtistIds: song?.collaborationArtistIds || [],
+    albumId: song?.albumId?._id || undefined,
+    collaborationArtistIds: song?.collaborationArtistIds?.map(artist => artist._id) || [],
     description: song?.description || "",
   })
   const [albums, setAlbums] = useState(null);

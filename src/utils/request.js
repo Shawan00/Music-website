@@ -1,6 +1,7 @@
 import { clientRefreshToken } from '@/services/Auth/authService';
 import axios from 'axios';
 
+// const preAIP = "http://localhost:3000/";
 const preAIP = "https://projectmusic.onrender.com/";
 
 const api = axios.create();
@@ -24,7 +25,6 @@ api.interceptors.request.use(function (config) {
 
 // thêm interceptors cho response
 api.interceptors.response.use(function (response) {
-  // Do nothing with response data
   return response;
 }, async function (error) {
   if (
@@ -46,9 +46,8 @@ api.interceptors.response.use(function (response) {
 
       return api(originalRequest);
     } catch (error) {
-      // console.error('Refresh token failed:', error);
-      localStorage.removeItem('accessToken');
       localStorage.removeItem('user');
+      localStorage.removeItem('accessToken');
       // window.location.href = "/login";
       return Promise.reject(error);
     }
