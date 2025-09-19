@@ -20,7 +20,7 @@ export const formatDate = (date) => {
 // chuyển từ "2025-06-14T14:18:33.664Z" thành June 14, 2025
 export const formatDateToString = (date) => {
   const d = new Date(date);
-  const options = { year: 'numeric', month: 'long', day: 'numeric' };
+  const options = { year: 'numeric', month: 'short', day: 'numeric' };
   return d.toLocaleDateString('en-US', options);
 }
 

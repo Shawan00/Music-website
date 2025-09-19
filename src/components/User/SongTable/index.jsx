@@ -29,7 +29,7 @@ function SongTable({ songs, currentPlaylistId, setCurrentPlaylist, setLikedSongs
             <th className={`px-3 sm:px-6 py-3 text-left ${hideAlbum ? "hidden" : "hidden sm:table-cell"}`}>Album</th>
             <th className="px-3 sm:px-6 py-3 text-left hidden sm:table-cell">Streams</th>
             <th className="px-3 sm:px-6 py-3 text-left hidden sm:table-cell">Likes</th>
-            <th className="px-3 sm:px-6 py-3 text-left hidden lg:table-cell">Release date</th>
+            <th className="px-3 sm:px-6 py-3 text-left hidden lg:table-cell">Release</th>
             <th className="p-3"></th>
           </tr>
         </thead>
@@ -54,7 +54,7 @@ function SongTable({ songs, currentPlaylistId, setCurrentPlaylist, setLikedSongs
                   </>
                 )}
               </td>
-              <td className="p-3 sm:px-6 flex gap-2">
+              <td className="p-3 sm:px-6 flex gap-2 max-w-[80vw]">
                 <div className="size-15 lg:size-15 rounded-xs overflow-hidden flex items-center justify-center">
                   <img
                     src={resizeImage(song.thumbnail, 60)}
@@ -62,7 +62,7 @@ function SongTable({ songs, currentPlaylistId, setCurrentPlaylist, setLikedSongs
                     className="w-full aspect-square object-cover"
                   />
                 </div>
-                <div className="flex flex-col justify-center gap-2">
+                <div className="flex flex-col justify-center gap-2 flex-1 overflow-auto">
                   <span className="font-medium group-hover:text-[var(--logo-color)] line-clamp-1">{song.title}</span>
                   <span className="text-sm text-muted-foreground">
                     <ArtistUrl artistId={song.artistId} collaborationArtistIds={song.collaborationArtistIds} />

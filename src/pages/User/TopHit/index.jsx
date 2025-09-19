@@ -89,7 +89,7 @@ function TopHit() {
               hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md border-b border-border"
         onClick={() => dispatch(selectSong(song))}
       >
-        <div className="w-2/3 flex items-center gap-2 sm:gap-4">
+        <div className="w-3/4 sm:w-2/3 flex items-center gap-2 sm:gap-4">
           <strong className="text-base sm:text-xl font-extrabold text-green-500 block min-w-7 sm:min-w-9">#{index}</strong>
           <div className="w-13 sm:w-15 rounded-sm overflow-hidden relative group">
             <img

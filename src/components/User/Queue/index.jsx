@@ -39,7 +39,7 @@ function Queue() {
               <div className='image'>
                 <img src={resizeImage(playerControl.song.thumbnail, 60)} alt="thumbnail"></img>
               </div>
-              <div className='info'>
+              <div className='info flex-1 overflow-auto hide-scrollbar'>
                 <span className='title text-green-500'>{playerControl.song.title}</span>
                 <ArtistUrl artistId={playerControl.song.artistId} collaborationArtistIds={playerControl.song.collaborationArtistIds} />
               </div>

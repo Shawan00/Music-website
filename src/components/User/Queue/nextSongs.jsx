@@ -51,7 +51,7 @@ function NextSongs({ nextSongs }) {
           <div className='image'>
             <img src={resizeImage(item.thumbnail || "", 60)} alt="thumbnail"></img>
           </div>
-          <div className='info'>
+          <div className='info flex-1 overflow-auto hide-scrollbar'>
             <span className='title'>{item.title}</span>
             <ArtistUrl artistId={item.artistId} collaborationArtistIds={item.collaborationArtistIds} />
           </div>

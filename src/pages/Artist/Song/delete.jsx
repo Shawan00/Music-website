@@ -13,11 +13,15 @@ function DeleteSong({ song, setSongs }) {
     setPending(true);
     const res = await deleteSong(song._id);
     if (res.status === 200) {
-      showToast(res.data.message, "success");
+      showToast("Delete song successfully", "success");
       setSongs(prev => prev.filter(prev => prev._id !== song._id));
       setDialogOpen(false);
     } else {
-      showToast(res.data.message, "error");
+      if (res.status === 401) {
+        showToast("Please login to delete song", "error");
+      } else {
+        showToast("Delete song failed", "error");
+      }
     }
     setPending(false);
   }

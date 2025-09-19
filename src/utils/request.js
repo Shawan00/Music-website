@@ -24,7 +24,8 @@ axios.interceptors.response.use(function (response) {
   if (
     error.response &&
     error.response.status === 401 &&
-    !error.config._retry
+    !error.config._retry &&
+    error.config.url !== "user/auth/refreshToken"
   ) {
     let originalRequest = error.config;
     originalRequest._retry = true;

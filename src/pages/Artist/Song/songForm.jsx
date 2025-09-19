@@ -101,7 +101,11 @@ function SongForm({ song = null, setSongs }) {
         navigate(0);
       }
     } else {
-      showToast(res.data.message, "error");
+      if (res.status === 401) {
+        showToast("You are not authorized", "error");
+      } else {
+        showToast(res.data.message, "error");
+      }
     }
   }
 

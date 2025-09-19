@@ -56,7 +56,7 @@ function InfoTab({ song }) {
                     </p>
                   </Link>
                   {song.collaborationArtistIds && song.collaborationArtistIds.map((artist) => (
-                    <Link to={`/profile/${artist._id}`}
+                    <Link to={`/profile/${artist._id}`} key={artist._id}
                       className="flex flex-col items-center w-full gap-1 group"
                     >
                       <Avatar className="w-full h-auto aspect-square">
