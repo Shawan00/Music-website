@@ -16,6 +16,7 @@ function LikedSong() {
 
   useEffect(() => {
     document.title = "Liked Songs - Music Project";
+    if (!user) return;
     const fetchLikedSongs = async () => {
       const response = await getAllLikedSong();
       if (response.status === 200) {
@@ -25,7 +26,7 @@ function LikedSong() {
       }
     }
     fetchLikedSongs();
-  }, [])
+  }, [user])
 
   if (!user) return (
     <div className="flex flex-col items-center justify-center h-full">

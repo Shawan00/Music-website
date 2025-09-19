@@ -21,7 +21,6 @@ axios.interceptors.request.use(function (config) {
 axios.interceptors.response.use(function (response) {
   return response;
 }, async function (error) {
-  console.log(error.response, error.response.status === 401, !error.config.retry)
   if (
     error.response &&
     error.response.status === 401 &&

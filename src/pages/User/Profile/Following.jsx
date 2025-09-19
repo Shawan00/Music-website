@@ -11,7 +11,6 @@ function Following() {
   useEffect(() => {
     const fetchArtist = async () => {
       const res = await getFollowingArtist();
-      console.log(res)
       if (res.status === 200) {
         setArtists(res.data.artists)
       } else setArtists([])

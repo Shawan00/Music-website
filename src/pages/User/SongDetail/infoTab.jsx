@@ -10,7 +10,6 @@ function InfoTab({ song }) {
   const backgroundStyle = {
     backgroundImage: `url(${song?.background || defaultBg})`
   };
-  console.log(song)
 
   return (
     <>

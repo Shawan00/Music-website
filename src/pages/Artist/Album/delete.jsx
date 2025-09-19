@@ -12,7 +12,6 @@ function DeleteAlbum({ albumId, setAlbums }) {
   const handleDelete = async () => {
     setPending(true);
     const res = await deleteAlbum(albumId);
-    console.log(res);
     if (res.status === 200) {
       showToast(res.data.message, "success");
       setAlbums(prev => prev.filter(album => album._id !== albumId));

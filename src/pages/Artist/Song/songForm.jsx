@@ -92,7 +92,6 @@ function SongForm({ song = null, setSongs }) {
 
   const handleSubmit = async () => {
     const res = song ? await updateSong(song._id, formData) : await createSong(formData);
-    console.log(res);
     if (res.status === 200) {
       showToast(res.data.message, "success");
       if (song) {

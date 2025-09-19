@@ -36,6 +36,5 @@ export const clientRegister = async (data) => {
 
 export const clientRefreshToken = async () => {
   const response = await post('user/auth/refreshToken')
-  console.log(response)
   return response
 }

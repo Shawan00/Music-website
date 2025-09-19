@@ -48,7 +48,6 @@ function AlbumForm({ album = null, setAlbums }) {
 
   const handleSubmit = async () => {
     const res = album ? await updateAlbum(album._id, formData) : await createAlbum(formData);
-    console.log(res);
     if (res.status === 200 || res.status === 201) {
       showToast(res.data.message, "success");
       setAlbums(prev => {
