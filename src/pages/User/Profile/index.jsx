@@ -2,7 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AuthContext } from "@/context/auth.context"
 import { getAvatarFallback, resizeImage } from "@/helpers";
 import { Dot } from "lucide-react";
-import { useContext } from "react"
+import { useContext, useEffect } from "react"
 import { useNavigate } from "react-router-dom";
 import EditProfile from "./edit";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -12,11 +12,17 @@ import Following from "./Following";
 function Profile() {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
-  document.title = "Profile | Music App";
+  
+  useEffect(() => {
+    document.title = "Profile | Music App";
+    if (!user) {
+      navigate("/login");
+      return;
+    }
+  }, [user, navigate])
 
   if (!user) {
-    navigate("/login");
-    return;
+    return null;
   }
 
   return (

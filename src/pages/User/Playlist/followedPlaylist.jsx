@@ -33,7 +33,7 @@ function FollowedPlaylist() {
   )
 
   return (
-    <section className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6 mb-5">
+    <section className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 sm:gap-6 mb-5">
       {playlists.map((playlist) => (
         <div key={playlist._id} className="w-full">
           <div className="w-full rounded-sm overflow-hidden relative group"

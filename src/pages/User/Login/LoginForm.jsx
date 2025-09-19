@@ -1,7 +1,6 @@
 import InputCustom from "@/components/ui/inputCustom";
 import { EyeClosed, Mail } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
-import { BiLogoFacebook, BiLogoGithub, BiLogoGoogle } from "react-icons/bi";
+import { useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import { AuthContext } from "@/context/auth.context";
 import { clientLogin } from "@/services/Auth/authService";
