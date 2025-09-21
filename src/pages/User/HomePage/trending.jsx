@@ -2,17 +2,15 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { getSuggestedSongs } from "@/services/Client/songService";
 import { useEffect, useState } from "react";
 import SongItem from "./songItem";
-import { useIsTablet } from "@/hooks/use-tablet";
 
 function Trending() {
   const [songs, setSongs] = useState(null);
-  const tablet = useIsTablet();
 
   useEffect(() => {
     const fetchSong = async () => {
       const res = await getSuggestedSongs({
         type: "trending",
-        limit: tablet ? 6 : 12
+        limit: 10
       })
       if (res.status === 200) {
         setSongs(res.data.recommendations)
@@ -21,7 +19,7 @@ function Trending() {
       }
     }
     fetchSong()
-  }, [tablet])
+  }, [])
 
   if (!songs) return (
     <Skeleton className="w-full h-100 mb-5" />
@@ -39,24 +37,22 @@ function Trending() {
   const gridRows = () => {
     switch (songs.length) {
       case 1:
-        return "grid-rows-1"
+        return "lg:grid-rows-1"
       case 2:
-        return "grid-rows-2"
+        return "lg:grid-rows-2"
       case 3:
-        return "grid-rows-3"
+        return "lg:grid-rows-3"
       case 4:
-        return "grid-rows-4"
-      case 5:
-        return "grid-rows-5"
+        return "lg:grid-rows-4"
       default:
-        return "grid-rows-6"
+        return "lg:grid-rows-5"
     }
   }
 
   return (
     <>
       <h2>On top Trending</h2>
-      <section className={`grid grid-cols-1 lg:grid-cols-2 ${gridRows()} grid-flow-col gap-x-4 gap-y-0 mb-5`}>
+      <section className={`grid grid-cols-1 lg:grid-cols-2 ${gridRows()} lg:grid-flow-col gap-x-4 gap-y-0 mb-5`}>
         {songs.map((song, index) => (
           <div key={song._id}
             className="flex items-center gap-2"
