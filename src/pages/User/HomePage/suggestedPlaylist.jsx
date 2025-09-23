@@ -6,10 +6,12 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import { Navigation } from 'swiper/modules';
+import { motion } from 'framer-motion';
+import { fadeIn, staggerContainer } from "@/helpers/animationVariant";
 
 function SuggestedPlaylist() {
   const [playlists, setPlaylists] = useState(null);
-  
+
   useEffect(() => {
     const getPlaylists = async () => {
       const response = await getSuggestedPlaylist();
@@ -38,7 +40,12 @@ function SuggestedPlaylist() {
   return (
     <>
       <h2>Playlists shared with you</h2>
-      <section className="grid grid-cols-1">
+      <motion.section className="grid grid-cols-1"
+        variants={staggerContainer}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+      >
         <Swiper
           loop={true}
           className='block w-full mb-5'
@@ -60,11 +67,13 @@ function SuggestedPlaylist() {
         >
           {playlists.map((playlist) => (
             <SwiperSlide key={playlist._id}>
-              <PlaylistCard playlist={playlist} />
+              <motion.div variants={fadeIn.up}>
+                <PlaylistCard playlist={playlist} />
+              </motion.div>
             </SwiperSlide>
           ))}
         </Swiper>
-      </section>
+      </motion.section>
     </>
   )
 }

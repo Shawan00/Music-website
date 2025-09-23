@@ -15,14 +15,6 @@ function HomePage() {
       <h2>Recommended for you</h2>
       <SugesstedSong />
 
-      <h2>Best of artist</h2>
-      <SuggesstedArtist />
-
-      <Trending />
-
-      <SuggestedPlaylist />
-
-      <SuggestedAlbum />
     </>
   )
 }

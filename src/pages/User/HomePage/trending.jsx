@@ -2,6 +2,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { getSuggestedSongs } from "@/services/Client/songService";
 import { useEffect, useState } from "react";
 import SongItem from "./songItem";
+import { motion } from 'framer-motion';
+import { fadeIn, staggerContainer } from "@/helpers/animationVariant";
+import SuggestedPlaylist from "./suggestedPlaylist";
+import SuggestedAlbum from "./suggestedAlbum";
 
 function Trending() {
   const [songs, setSongs] = useState(null);
@@ -52,16 +56,26 @@ function Trending() {
   return (
     <>
       <h2>On top Trending</h2>
-      <section className={`grid grid-cols-1 lg:grid-cols-2 ${gridRows()} lg:grid-flow-col gap-x-4 gap-y-0 mb-5`}>
+      <motion.section
+        variants={staggerContainer}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+        className={`grid grid-cols-1 lg:grid-cols-2 ${gridRows()} lg:grid-flow-col gap-x-4 gap-y-0 mb-5`}
+      >
         {songs.map((song, index) => (
-          <div key={song._id}
+          <motion.div key={song._id}
+            variants={fadeIn.down}
             className="flex items-center gap-2"
           >
             <span className={`text-xl font-extrabold w-5 ${textColor(index + 1)}`}>{index + 1}</span>
             <SongItem item={song} />
-          </div>
+          </motion.div>
         ))}
-      </section>
+      </motion.section>
+
+      <SuggestedPlaylist />
+      <SuggestedAlbum />
     </>
   )
 }

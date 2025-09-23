@@ -76,12 +76,12 @@ function LyricsTabs({ lyricsUrl }) {
 
       // Tính toán vị trí scroll
       const lineTop = activeLine.offsetTop;
-      const scrollPosition = lineTop - lineHeight / 2 - containerHeight / 2 - 27;
+      const scrollPosition = lineTop - containerHeight / 2 + lineHeight / 2;
 
       // Giới hạn scroll position để không vượt quá phạm vi
       const maxScroll = container.scrollHeight - containerHeight;
       const finalScrollPosition = Math.max(0, Math.min(scrollPosition, maxScroll));
-
+      
       isProgrammaticScroll.current = true
 
       container.scrollTo({
@@ -142,7 +142,7 @@ function LyricsTabs({ lyricsUrl }) {
       <div
         ref={lyricsContainerRef}
         onScroll={suspendAutoScroll}
-        className="select-none flex flex-col gap-3 items-center justify-start pb-8 w-[97%] sm:w-[88%] md:w-[60%] lg:w-[50%] mx-auto white-space-pre-wrap h-full overflow-auto hide-scrollbar"
+        className="select-none relative flex flex-col gap-3 items-center justify-start pb-8 w-[97%] sm:w-[88%] md:w-[60%] lg:w-[50%] mx-auto white-space-pre-wrap h-full overflow-auto hide-scrollbar"
       >
         {lyrics.map((item, index) => (
           <div

@@ -3,6 +3,9 @@ import { getSuggestedSongs } from '../../../services/Client/songService';
 import { Skeleton } from '@/components/ui/skeleton';
 import SongItem from '@/pages/User/HomePage/songItem';
 import { removeDuplicatesById } from '@/helpers';
+import { motion } from 'framer-motion';
+import { fadeIn, staggerContainer } from '@/helpers/animationVariant';
+import SuggesstedArtist from '@/pages/User/HomePage/suggesstedArtist';
 
 function SugesstedSong() {
   const [sugesstedSongs, setSuggesstedSong] = useState(null);
@@ -11,7 +14,7 @@ function SugesstedSong() {
     const getData = async () => {
       const response = await getSuggestedSongs({
         type: "hybrid",
-        limit: 6
+        limit: 6  
       });
       setSuggesstedSong(removeDuplicatesById(response.data.recommendations));
     }
@@ -20,11 +23,23 @@ function SugesstedSong() {
 
   return sugesstedSongs ? (
     <>
-      <div className='sugessted-song mb-5'>
+      <motion.div className='sugessted-song mb-5'
+        variants={staggerContainer}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+      >
         {sugesstedSongs.map((item) => (
-          <SongItem key={item._id} item={item}/>
+          <motion.div
+            variants={fadeIn.down}
+            key={item._id}
+          >
+            <SongItem item={item}/>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
+
+      <SuggesstedArtist />
     </>
   ) : (
     <div className='sugessted-song'>

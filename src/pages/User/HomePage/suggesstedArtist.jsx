@@ -8,6 +8,9 @@ import { Navigation } from 'swiper/modules';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getAvatarFallback, resizeImage } from "@/helpers";
 import { useNavigate } from "react-router-dom";
+import { motion } from 'framer-motion';
+import { fadeIn, staggerContainer } from "@/helpers/animationVariant";
+import Trending from "./trending";
 
 function SuggesstedArtist() {
   const navigate = useNavigate();
@@ -37,40 +40,52 @@ function SuggesstedArtist() {
   )
 
   return (
-    <section className="mb-5 grid grid-cols-1">
-      <Swiper
-        loop={true}
-        className='block w-full'
-        spaceBetween={12}
-        slidesPerView={2}
-        navigation={true}
-        modules={[Navigation]}
-        breakpoints={{
-          425: {
-            slidesPerView: 2,
-          },
-          768: {
-            slidesPerView: 4,
-          },
-          1280: {
-            slidesPerView: 6,
-          }
-        }}
+    <>
+      <motion.section className="mb-5 grid grid-cols-1"
+        variants={staggerContainer}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
       >
-        {artist.map((item) => (
-          <SwiperSlide key={item._id}
-            className="cursor-pointer"
-            onClick={() => navigate(`/profile/${item._id}`)}
-          >
-            <Avatar className="w-full h-auto aspect-square mb-2">
-              <AvatarImage src={resizeImage(item.avatar || "", 210)}/>
-              <AvatarFallback>{getAvatarFallback(item.fullName)}</AvatarFallback>
-            </Avatar>
-            <p className="font-semibold truncate text-center">{item.fullName}</p>
-          </SwiperSlide>
-        ))}
-      </Swiper>
-    </section>
+        <h2>Best of artist</h2>
+        <Swiper
+          loop={true}
+          className='block w-full'
+          spaceBetween={12}
+          slidesPerView={2}
+          navigation={true}
+          modules={[Navigation]}
+          breakpoints={{
+            425: {
+              slidesPerView: 2,
+            },
+            768: {
+              slidesPerView: 4,
+            },
+            1280: {
+              slidesPerView: 6,
+            }
+          }}
+        >
+          {artist.map((item) => (
+            <SwiperSlide key={item._id}
+              className="cursor-pointer"
+              onClick={() => navigate(`/profile/${item._id}`)}
+            >
+              <motion.div variants={fadeIn.right}>
+                <Avatar className="w-full h-auto aspect-square mb-2">
+                  <AvatarImage src={resizeImage(item.avatar || "", 210)} />
+                  <AvatarFallback>{getAvatarFallback(item.fullName)}</AvatarFallback>
+                </Avatar>
+                <p className="font-semibold truncate text-center">{item.fullName}</p>
+              </motion.div>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+
+      </motion.section>
+      <Trending />
+    </>
   )
 
 }

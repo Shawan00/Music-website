@@ -6,6 +6,8 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import { Navigation } from 'swiper/modules';
 import AlbumCard from "@/components/User/AlbumCard";
+import { motion } from 'framer-motion';
+import { fadeIn, staggerContainer } from "@/helpers/animationVariant";
 
 function SuggestedAlbum() {
   const [albums, setAlbums] = useState(null);
@@ -38,7 +40,12 @@ function SuggestedAlbum() {
   return (
     <>
       <h2>Albums shared with you</h2>
-      <section className="grid grid-cols-1">
+      <motion.section className="grid grid-cols-1"
+        variants={staggerContainer}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+      >
         <Swiper
           loop={true}
           className='block w-full mb-5'
@@ -60,11 +67,13 @@ function SuggestedAlbum() {
         >
           {albums.map((album) => (
             <SwiperSlide key={album._id}>
+              <motion.div variants={fadeIn.down}>
               <AlbumCard album={album} />
+              </motion.div>
             </SwiperSlide>
           ))}
         </Swiper>
-      </section>
+      </motion.section>
     </>
   )
 }
