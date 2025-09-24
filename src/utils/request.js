@@ -1,8 +1,8 @@
 import { clientRefreshToken } from '@/services/Auth/authService';
 import axios from 'axios';
 
-const preAPI = "http://localhost:3000/";
-// const preAPI = import.meta.env.VITE_API_URL;
+// const preAPI = "http://localhost:3000/";
+const preAPI = import.meta.env.VITE_API_URL;
 
 axios.defaults.baseURL = preAPI
 axios.defaults.withCredentials = true
